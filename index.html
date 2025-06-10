@@ -1,0 +1,3346 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/iRPFjs4.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackWood - Conglomérat International d'Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* CSS Variables for light and dark themes */
+        :root {
+            --bg-primary: #f0f8ff; /* Main background color (light) - improved contrast */
+            --bg-secondary: #f8f0ff; /* Secondary background color (light) */
+            --bg-tertiary: #fff0f8; /* Tertiary background color (light) */
+            --text-color-primary: #0a0a0a; /* Main text color (light) - darker for contrast */
+            --text-color-secondary: #2a2a2a; /* Secondary text color (light) - darker for contrast */
+            --card-bg: rgba(255, 255, 255, 0.95); /* Card background (more opaque for contrast) */
+            --card-bg-rgb: 255, 255, 255; /* RGB for card background */
+            --modal-bg-start: rgba(255, 255, 255, 0.98); /* Modal gradient start (more opaque) */
+            --modal-bg-end: rgba(255, 255, 255, 0.95); /* Modal gradient end */
+            --border-color: rgba(0, 0, 0, 0.1); /* Border color - slightly stronger */
+            --header-bg: rgba(255, 255, 255, 0.2); /* Header background - slightly less transparent */
+            --header-border: rgba(0, 0, 0, 0.07); /* Header border */
+            --header-scrolled-bg: rgba(255, 255, 255, 0.1); /* Header background on scroll */
+            --header-scrolled-border: rgba(255, 255, 255, 0.05); /* Header border on scroll */
+            --shadow-color-light: rgba(50, 50, 93, 0.15); /* Light shadow - slightly stronger */
+            --shadow-color-dark: rgba(0, 0, 0, 0.3); /* Dark shadow - slightly stronger */
+            --scroll-thumb: rgba(0, 0, 0, 0.4); /* Scrollbar thumb color */
+            --scroll-thumb-hover: rgba(0, 0, 0, 0.6); /* Scrollbar thumb hover color */
+            --scroll-track: rgba(0, 0, 0, 0.05); /* Scrollbar track color */
+            --separator-gradient-middle: rgba(80, 82, 220, 0.6); /* Separator gradient middle - stronger */
+            --footer-bg: #080808; /* Footer background */
+            --footer-text: #b0b0b0; /* Footer text */
+            --footer-link-hover: #7c7ee1; /* Footer link hover */
+            --icon-color: #5a76d4; /* Main accent color (blue) */
+            --secondary-accent-color: #8e5cd6; /* Secondary accent color (purple) */
+            --tertiary-accent-color: #f472b6; /* Tertiary accent color (pink) */
+            --close-btn-color: #2c2c2c; /* Close button color */
+            --theme-toggle-color: #1a1a1a; /* Theme toggle button color */
+            --logo-color: #1a1a1a; /* Logo color */
+            --modal-header-bg: rgba(255, 255, 255, 0.97); /* Modal header background */
+            --modal-header-border: rgba(0, 0, 0, 0.09); /* Modal header border - stronger */
+            --footer-border-top: rgba(255, 255, 255, 0.06); /* Footer top border */
+            --input-bg-light: #ffffff; /* Input field background (light) - solid white */
+            --input-border-light: #c1c1c1; /* Input field border (light) - stronger */
+            --button-text-light: #ffffff; /* Button text (light) */
+            --button-bg-light-start: #5a76d4; /* Button gradient start (light) */
+            --button-bg-light-end: #8e5cd6; /* Button gradient end (light) */
+            --button-shadow-light: rgba(90, 118, 212, 0.35); /* Button shadow (light) - stronger */
+            --button-hover-shadow-light: rgba(90, 118, 212, 0.55); /* Button hover shadow (light) - stronger */
+            --investment-card-bg: rgba(255, 255, 255, 0.9); /* Investment card background - more opaque */
+            --investment-border: rgba(0,0,0,0.08); /* Investment card border - stronger */
+            --news-card-bg: rgba(255, 255, 255, 0.95); /* News card background - more opaque */
+            --stock-change-positive: #16a34a; /* Positive stock change color */
+            --stock-change-negative: #dc2626; /* Negative stock change color */
+            --chart-line-color-start: #5a76d4; /* Chart line gradient start */
+            --chart-line-color-end: #8e5cd6; /* Chart line gradient end */
+            --chart-axis-color: #4a4a4a; /* Chart axis color - darker */
+            --tooltip-bg: rgba(0, 0, 0, 0.85); /* Tooltip background - darker */
+            --tooltip-text: #ffffff; /* Tooltip text color */
+            --org-chart-bg: rgba(255, 255, 255, 0.9); /* Org chart background (light) - more opaque */
+
+            /* Light mode specific dropdown styles */
+            --dropdown-bg-light: rgba(255, 255, 255, 1); /* Fully opaque */
+            --dropdown-text-light: #2a2a2a; /* Darker */
+            --dropdown-hover-bg-light: rgba(0, 0, 0, 0.1); /* Slightly more visible hover */
+            --dropdown-hover-text-light: #5a76d4;
+            --dropdown-item-indicator: #5a76d4;
+
+            /* Chatbot specific variables (Light Mode) */
+            --chatbot-bg: rgba(255, 255, 255, 0.95); /* More solid, better contrast */
+            --chatbot-border: rgba(0, 0, 0, 0.15);
+            --chatbot-shadow: rgba(0, 0, 0, 0.2);
+            --chat-header-bg: linear-gradient(90deg, #e0e6f5, #f0e6f5); /* Light, subtle gradient */
+            --chat-input-bg: #ffffff; /* Solid white for input */
+            --chat-input-border: #cccccc; /* Clearer border */
+            --chat-message-user-bg: linear-gradient(135deg, #e6f0ff, #f0f7ff); /* Light user message gradient */
+            --chat-message-ai-bg: linear-gradient(135deg, #f0f0f0, #fafafa); /* Light AI message gradient */
+            --chat-message-text: #1a1a1a;
+            --chat-button-bg: #5a76d4;
+            --chat-button-text: #ffffff;
+            --chat-button-hover-bg: #4a63be;
+            --chat-loading-spinner: #5a76d4;
+            --chat-reply-icon-color: #6b7280;
+            --chat-input-border-focus: #5a76d4;
+            --chat-input-shadow-focus: rgba(90, 118, 212, 0.25); /* Stronger shadow on focus */
+            --chat-message-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Stronger message shadow */
+            --chat-message-ai-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Lighter shadow for AI messages */
+        }
+
+        /* CSS Variables for dark theme */
+        html[data-theme="dark"] {
+            --bg-primary: #12121c; /* Main background color (dark) */
+            --bg-secondary: #181224; /* Secondary background color (dark) */
+            --bg-tertiary: #1c121a; /* Tertiary background color (dark) */
+            --text-color-primary: #e0e0e5; /* Main text color (dark) */
+            --text-color-secondary: #b0b0c0; /* Secondary text color (dark) */
+            --card-bg: rgba(10, 10, 20, 0.85); /* Card background (dark) - slightly more opaque */
+            --card-bg-rgb: 10, 10, 20; /* RGB for card background */
+            --modal-bg-start: rgba(5, 5, 10, 0.95); /* Modal gradient start (dark) */
+            --modal-bg-end: rgba(5, 5, 10, 0.9); /* Modal gradient end (dark) */
+            --border-color: rgba(255, 255, 255, 0.18); /* Border color (dark) - stronger */
+            --header-bg: rgba(0, 0, 0, 0.4); /* Header background (dark) - slightly less transparent */
+            --header-border: rgba(255, 255, 255, 0.1); /* Header border (dark) */
+            --header-scrolled-bg: rgba(0, 0, 0, 0.6); /* Header background on scroll (dark) */
+            --header-scrolled-border: rgba(255, 255, 255, 0.06); /* Header border on scroll (dark) */
+            --shadow-color-light: rgba(0, 0, 0, 0.45); /* Light shadow (dark) - stronger */
+            --shadow-color-dark: rgba(0, 0, 0, 0.7); /* Dark shadow (dark) - stronger */
+            --scroll-thumb: rgba(255, 255, 255, 0.35); /* Scrollbar thumb color (dark) */
+            --scroll-thumb-hover: rgba(255, 255, 255, 0.55); /* Scrollbar thumb hover color (dark) */
+            --scroll-track: rgba(255, 255, 255, 0.05); /* Scrollbar track color (dark) */
+            --separator-gradient-middle: rgba(124, 126, 225, 0.45); /* Separator gradient middle (dark) - stronger */
+            --footer-bg: #030303; /* Footer background (dark) */
+            --footer-text: #9090a0; /* Footer text (dark) */
+            --footer-link-hover: #9a86d3; /* Footer link hover (dark) */
+            --icon-color: #9a86d3; /* Main accent color (purple) */
+            --secondary-accent-color: #5a76d4; /* Secondary accent color (blue) */
+            --tertiary-accent-color: #f472b6; /* Tertiary accent color (pink) */
+            --close-btn-color: #d0d0d5; /* Close button color (dark) */
+            --theme-toggle-color: #e0e0e5; /* Theme toggle button color (dark) */
+            --logo-color: #ffffff; /* Logo color changed to pure white for dark mode */
+            --modal-header-bg: rgba(0, 0, 5, 0.98); /* Modal header background (dark) */
+            --modal-header-border: rgba(255, 255, 255, 0.15); /* Modal header border (dark) - stronger */
+            --footer-border-top: rgba(255, 255, 255, 0.07); /* Footer top border */
+            --input-bg-dark: #222230; /* Input field background (dark) */
+            --input-border-dark: #3a3a4c; /* Input field border (dark) */
+            --button-text-dark: #ffffff; /* Button text (dark) */
+            --button-bg-dark-start: #8e5cd6; /* Button gradient start (dark) */
+            --button-bg-dark-end: #5a76d4; /* Button gradient end (dark) */
+            --button-shadow-dark: rgba(142, 92, 214, 0.35); /* Button shadow (dark) - stronger */
+            --button-hover-shadow-dark: rgba(142, 92, 214, 0.55); /* Button hover shadow (dark) - stronger */
+            --button-text-dark: #ffffff; /* Button text (dark) */
+            --investment-card-bg: rgba(15, 15, 25, 0.85); /* Investment card background (dark) - more opaque */
+            --investment-border: rgba(255,255,255,0.12); /* Investment card border (dark) - stronger */
+            --news-card-bg: rgba(12, 12, 22, 0.9); /* News card background (dark) - more opaque */
+            --stock-change-positive: #22c55e; /* Positive stock change color (dark) */
+            --stock-change-negative: #ef4444; /* Negative stock change color (dark) */
+            --chart-line-color-start: #8e5cd6; /* Chart line gradient start (dark) */
+            --chart-line-color-end: #5a76d4; /* Chart line gradient end (dark) */
+            --chart-axis-color: #a1a1aa; /* Chart axis color (dark) */
+            --tooltip-bg: rgba(0, 0, 0, 0.85); /* Tooltip background */
+            --tooltip-text: #ffffff; /* Tooltip text color */
+            --org-chart-bg: rgba(10, 10, 20, 0.8); /* Org chart background (dark) - more opaque */
+            --border-color-darker: rgba(255, 255, 255, 0.25); /* Darker border for dark mode */
+
+            /* Dark mode specific dropdown styles */
+            --dropdown-bg-dark: rgba(10, 10, 20, 1); /* Fully opaque */
+            --dropdown-text-dark: #b0b0c0;
+            --dropdown-hover-bg-dark: rgba(255, 255, 255, 0.1); /* Slightly more visible hover */
+            --dropdown-hover-text-dark: #9a86d3;
+            --dropdown-item-indicator: #9a86d3;
+
+            /* Chatbot specific variables (Dark Mode) */
+            --chatbot-bg: rgba(20, 20, 30, 0.9); /* More solid for contrast */
+            --chatbot-border: rgba(255, 255, 255, 0.2);
+            --chatbot-shadow: rgba(0, 0, 0, 0.5);
+            --chat-header-bg: linear-gradient(90deg, #2b2b40, #3a3a50); /* Dark, subtle gradient */
+            --chat-input-bg: #2a2a3a;
+            --chat-input-border: #4a4a5c;
+            --chat-message-user-bg: linear-gradient(135deg, #3d3d5c, #4a4a6e); /* Dark user message gradient */
+            --chat-message-ai-bg: linear-gradient(135deg, #202030, #282838); /* Dark AI message gradient */
+            --chat-message-text: #e0e0e5;
+            --chat-button-bg: #9a86d3;
+            --chat-button-text: #ffffff;
+            --chat-button-hover-bg: #8e5cd6;
+            --chat-loading-spinner: #9a86d3;
+            --chat-reply-icon-color: #9ca3af;
+            --chat-input-border-focus: #9a86d3;
+            --chat-input-shadow-focus: rgba(154, 134, 211, 0.25); /* Stronger shadow on focus */
+            --chat-message-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Stronger message shadow */
+            --chat-message-ai-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Stronger shadow for AI messages */
+        }
+
+        /* General HTML and body styles */
+        html, body {
+            height: 100%; /* Ensure html and body take full viewport height */
+            min-height: 100%; /* Ensure html and body take full viewport height */
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            /* Animated background gradient */
+            background: linear-gradient(270deg, var(--bg-primary), var(--bg-secondary), var(--bg-tertiary), var(--bg-primary), var(--bg-secondary));
+            background-size: 600% 600%;
+            animation: backgroundPan 30s ease infinite alternate; /* Slower animation */
+            transition: background-color 0.5s ease, color 0.5s ease; /* Smooth theme color transition */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Main font for body text */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: var(--text-color-primary); /* Default text color */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            /* Removed background properties from body */
+        }
+
+        /* Background gradient animation */
+        @keyframes backgroundPan {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Smooth scroll behavior */
+        html { scroll-behavior: smooth; }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--scroll-track); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 5px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }
+
+        /* Fade-in animation on scroll */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(25px) scale(0.98);
+            transition: opacity 0.9s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: opacity, transform; /* Performance optimization */
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        /* Animation delays for individual elements */
+        .animate-delay-100 { transition-delay: 0.1s; }
+        .animate-delay-200 { transition-delay: 0.2s; }
+        .animate-delay-300 { transition-delay: 0.3s; }
+        .animate-delay-400 { transition-delay: 0.4s; }
+        .animate-delay-500 { transition-delay: 0.5s; }
+
+        /* Page transitions */
+        .page-transition-enter { opacity: 0; transform: scale(0.98) translateY(10px); }
+        .page-transition-enter-active { opacity: 1; transform: scale(1) translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .page-transition-exit { opacity: 1; transform: scale(1) translateY(0); }
+        .page-transition-exit-active { opacity: 0; transform: scale(0.98) translateY(-10px); transition: opacity 0.4s ease-in, transform 0.4s ease-in; }
+
+
+        /* Hero Section */
+        .hero-section {
+            background: transparent;
+            min-height: calc(100vh - 64px); /* Full viewport height minus header height */
+            display: flex;
+            flex-direction: column; /* Stack content vertically */
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            color: var(--text-color-primary);
+            padding-top: 4rem; /* Add padding to prevent content from being under the fixed header */
+            padding-bottom: 4rem;
+        }
+        #home-image-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Ensure it takes full height of hero-section */
+            background-size: cover;
+            background-position: center;
+            z-index: -2; /* Below particles */
+            transition: filter 1s ease-in-out; /* Smooth transition for filter */
+            will-change: filter;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+        }
+        .hero-content h1 {
+            font-family: 'Montserrat', sans-serif; /* Specific font for hero title */
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--icon-color), var(--secondary-accent-color), var(--tertiary-accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            background-size: 250% auto;
+            animation: textGradient 4s ease infinite alternate; /* Text gradient animation */
+            line-height: 1.05;
+            padding-bottom: 0.1em;
+            letter-spacing: -0.02em;
+            text-shadow: none; 
+            will-change: background-position;
+        }
+        .hero-content p {
+            text-shadow: none; 
+            color: var(--text-color-secondary); /* Ensure this uses a variable that adapts */
+        }
+        html[data-theme="dark"] .hero-content p {
+            color: var(--text-color-secondary); /* Explicitly set for dark mode if needed, or ensure variable is correct */
+        }
+
+        /* Text gradient animation */
+        @keyframes textGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Glassmorphism effect for text containers on home page */
+        .glass-container {
+            background-color: rgba(255, 255, 255, 0.7); /* Adjusted for light mode - better contrast */
+            backdrop-filter: blur(18px); 
+            -webkit-backdrop-filter: blur(18px); 
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem; 
+            border: 1px solid rgba(0, 0, 0, 0.15); /* Stronger border for light mode */
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15); /* Stronger shadow for light mode */
+            display: inline-block; 
+            will-change: background-color, backdrop-filter, box-shadow;
+        }
+        html[data-theme="dark"] .glass-container {
+            background-color: rgba(10, 10, 20, 0.45); /* Adjusted for dark mode */
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+        }
+
+        /* New glass container for "Qui sommes-nous?" section */
+        .about-us-glass-container {
+            background-color: rgba(var(--card-bg-rgb), 0.95); 
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            max-width: 900px; 
+            width: 92%; 
+            margin-top: 8rem; 
+            margin-bottom: 8rem; 
+            text-align: center; 
+            will-change: background-color, backdrop-filter, box-shadow;
+        }
+        html[data-theme="dark"] .about-us-glass-container {
+            background-color: rgba(var(--card-bg-rgb), 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+        }
+
+
+        /* Content Sections (used for other pages, not homepage now) */
+        .content-section {
+            padding: 5rem 1rem; /* Adjusted padding for mobile */
+            position: relative;
+            overflow: hidden; /* Keep this to manage overflow of inner elements */
+        }
+        @media (min-width: 768px) {
+            .content-section {
+                padding: 7rem 2rem; /* Original padding for larger screens */
+            }
+        }
+
+        /* Info, Subsidiary, Investment, News Cards */
+        .info-card, .subsidiary-card, .investment-card, .news-card, .office-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 1.75rem;
+            box-shadow: 0 15px 50px -5px var(--shadow-color-light);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+            color: var(--text-color-primary);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border-color);
+            display: flex; /* Added for flex layout */
+            flex-direction: column; /* Stack content vertically */
+            will-change: transform, box-shadow, background-color, backdrop-filter;
+        }
+        /* Hover effect for cards */
+        .info-card:hover, .subsidiary-card:hover, .investment-card:hover, .news-card:hover, .office-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 25px 60px -10px var(--shadow-color-dark);
+        }
+
+        /* Common container for logos/icons at the top of cards */
+        .subsidiary-icon-container { /* Specific for subsidiary cards */
+            width: 100%;
+            height: 280px; 
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(var(--card-bg-rgb), 0.05); 
+            position: relative;
+        }
+         @media (min-width: 768px) {
+            .subsidiary-icon-container {
+                height: 350px; 
+            }
+        }
+        .info-logo-container { /* Specific for info cards (poles on group page) */
+            width: 100%;
+            height: 300px; /* Increased height for mobile */
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(var(--card-bg-rgb), 0.05);
+            position: relative;
+        }
+         @media (min-width: 768px) {
+            .info-logo-container {
+                height: 380px; /* Increased height for desktop */
+            }
+        }
+
+
+        /* Styles for logo images within these containers */
+        .subsidiary-icon-container .dynamic-logo-img, .info-logo-container .dynamic-logo-img {
+            max-height: 90%; 
+            width: auto;
+            max-width: 80%; 
+            object-fit: contain;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: transform;
+        }
+        /* Hover effect for logos */
+        .subsidiary-card:hover .subsidiary-icon-container .dynamic-logo-img,
+        .info-card:hover .info-logo-container .dynamic-logo-img {
+            transform: scale(1.05);
+        }
+
+        /* Styles for fallback icons within these containers */
+        .subsidiary-icon-container i.fallback-icon-element { /* For subsidiary cards */
+            font-size: 8rem; 
+            color: var(--icon-color); 
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: transform;
+        }
+         @media (min-width: 768px) {
+            .subsidiary-icon-container i.fallback-icon-element {
+                font-size: 10rem; 
+            }
+        }
+        .info-logo-container i.fallback-icon-element { /* For info cards (poles) */
+            font-size: 12rem; /* Increased size for mobile */
+            color: var(--icon-color);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: transform;
+        }
+         @media (min-width: 768px) {
+            .info-logo-container i.fallback-icon-element {
+                font-size: 16rem; /* Increased size for desktop */
+            }
+        }
+        /* Hover effect for fallback icons */
+        .subsidiary-card:hover .subsidiary-icon-container i.fallback-icon-element,
+        .info-card:hover .info-logo-container i.fallback-icon-element {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+
+        /* Office card image specific styles */
+        .office-image-container {
+            width: 100%;
+            height: 250px; 
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) saturate(0%) blur(5px); 
+            transition: filter 0.7s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            position: relative;
+            will-change: filter, transform;
+        }
+        @media (min-width: 768px) {
+            .office-image-container {
+                 height: 300px; 
+            }
+        }
+        .office-image-container.loaded {
+            filter: grayscale(100%) saturate(0%) blur(0px); 
+        }
+        .office-card:hover .office-image-container {
+            filter: grayscale(0%) saturate(100%) blur(0px); 
+            transform: scale(1.05); 
+        }
+        .office-image-container .office-icon { 
+            position: absolute;
+            font-size: 4rem; 
+            color: rgba(255, 255, 255, 0.7); 
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+            transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: opacity;
+        }
+         @media (min-width: 768px) {
+            .office-image-container .office-icon {
+                 font-size: 4.5rem; 
+            }
+        }
+        .office-card:hover .office-image-container .office-icon {
+            opacity: 0; 
+        }
+
+
+        .investment-card {
+            background-color: var(--investment-card-bg);
+            border: 1px solid var(--investment-border);
+            padding: 2rem; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: auto; 
+            min-height: 220px; 
+            width: 100%; 
+        }
+         @media (min-width: 768px) {
+            .investment-card {
+                padding: 2.5rem;
+                min-height: 250px;
+            }
+        }
+        /* New styles for investment card logos */
+        .investment-logo-wrapper {
+            width: 100%; 
+            height: 80px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem; 
+        }
+        .investment-logo-wrapper .dynamic-logo-img {
+            max-height: 90%;
+            width: auto;
+            max-width: 80%;
+            object-fit: contain;
+            transition: filter 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            /* Default filter for light mode */
+            filter: grayscale(100%) brightness(0.7); 
+            will-change: filter, transform;
+        }
+        html[data-theme="dark"] .investment-logo-wrapper .dynamic-logo-img {
+            /* Filter for dark mode */
+            filter: invert(1) grayscale(100%) brightness(1.3); 
+        }
+
+        .investment-logo-wrapper .fallback-icon-element {
+            font-size: 3rem; 
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: transform;
+        }
+
+        .investment-card:hover .investment-logo-wrapper .dynamic-logo-img {
+            transform: scale(1.05);
+            filter: none; /* Remove all filters on hover */
+        }
+        .investment-card:hover .investment-logo-wrapper .fallback-icon-element {
+            transform: scale(1.1);
+        }
+
+        .news-card {
+            background-color: var(--news-card-bg);
+            padding: 1.5rem; 
+        }
+         @media (min-width: 768px) {
+            .news-card {
+                padding: 2rem; 
+            }
+        }
+
+        .stock-change.positive { color: var(--stock-change-positive); font-weight: 600; }
+        .stock-change.negative { color: var(--stock-change-negative); font-weight: 600; }
+
+        /* "Liquid modern" text gradient class */
+        .text-gradient-primary {
+            background: linear-gradient(45deg, var(--icon-color), var(--secondary-accent-color), var(--tertiary-accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            will-change: background-position;
+        }
+
+        /* Main button styles */
+        .hero-btn, .modal-open-btn, .normal-button {
+            background: linear-gradient(95deg, var(--button-bg-light-start), var(--button-bg-light-end));
+            color: var(--button-text-light);
+            padding: 0.8rem 2.2rem; 
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem; 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 10px 30px -5px var(--button-shadow-light);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.025em;
+            will-change: transform, box-shadow; 
+        }
+         @media (min-width: 768px) {
+            .hero-btn, .modal-open-btn, .normal-button {
+                 padding: 0.9rem 2.8rem; 
+                 font-size: 1.05rem; 
+            }
+        }
+
+        /* Button styles in dark mode */
+         html[data-theme="dark"] .hero-btn, html[data-theme="dark"] .modal-open-btn, html[data-theme="dark"] .normal-button {
+            background: linear-gradient(95deg, var(--button-bg-dark-start), var(--button-bg-dark-end));
+            box-shadow: 0 10px 30px -5px var(--button-shadow-dark);
+        }
+        /* Button shine effect on hover */
+        .hero-btn::before, .modal-open-btn::before, .normal-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -110%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: -1;
+            will-change: left;
+        }
+        .hero-btn:hover::before, .modal-open-btn:hover::before, .normal-button:hover::before { left: 110%; }
+        /* Button hover effect */
+        .hero-btn:hover, .modal-open-btn:hover, .normal-button:hover {
+            transform: scale(1.03) translateY(-4px);
+            box-shadow: 0 18px 45px -8px var(--button-hover-shadow-light);
+        }
+        html[data-theme="dark"] .hero-btn:hover, html[data-theme="dark"] .modal-open-btn:hover, html[data-theme="dark"] .normal-button:hover {
+            box-shadow: 0 18px 45px -8px var(--button-hover-shadow-dark);
+        }
+        /* Button click effect */
+        .hero-btn:active, .modal-open-btn:active, .normal-button:active {
+            transform: scale(0.97) translateY(0);
+            box-shadow: 0 6px 20px -4px var(--button-shadow-light);
+        }
+         html[data-theme="dark"] .hero-btn:active, html[data-theme="dark"] .modal-open-btn:active, html[data-theme="dark"] .normal-button:active {
+            box-shadow: 0 6px 20px -4px var(--button-shadow-dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background-color 0.5s ease, backdrop-filter 0.5s ease, border-bottom 0.5s ease, box-shadow 0.5s ease;
+            border-bottom: 1px solid var(--header-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            will-change: background-color, backdrop-filter, border-bottom, box-shadow;
+        }
+        /* Navbar on scroll */
+        .navbar.scrolled {
+            background-color: var(--header-scrolled-bg);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-bottom: 1px solid var(--header-scrolled-border);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .navbar-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem; 
+            letter-spacing: -0.05em; 
+            position: relative;
+            color: var(--logo-color); 
+        }
+         @media (min-width: 768px) {
+            .navbar-logo {
+                font-size: 1.75rem; 
+            }
+        }
+        
+
+        .navbar-link {
+            color: var(--text-color-primary);
+            font-weight: 500;
+            font-size: 0.9rem; 
+            transition: color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0.8rem; 
+            letter-spacing: 0.01em;
+            will-change: color, transform;
+        }
+        @media (min-width: 768px) {
+            .navbar-link {
+                 font-size: 0.95rem; 
+                 padding: 0.6rem 1.1rem; 
+            }
+        }
+        /* Underline effect on navbar link hover */
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--icon-color), var(--secondary-accent-color));
+            transition: width 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: width;
+        }
+        .navbar-link:hover::after { width: 80%; }
+        .navbar-link:hover { color: var(--icon-color); transform: translateY(-2px); }
+        /* Active navbar link style */
+        .navbar-link.active-page::after { width: 80%; }
+        .navbar-link.active-page { color: var(--icon-color); }
+        
+        /* Dropdown chevron animation */
+        #nav-link-group:hover .fa-chevron-down {
+            transform: translateY(-1px) rotate(180deg);
+            color: var(--icon-color);
+        }
+        #nav-link-group .fa-chevron-down {
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.3s ease;
+            will-change: transform, color;
+        }
+
+
+        /* Dropdown menu specific styles */
+        .group .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px) scale(0.95);
+            transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+            background-color: var(--dropdown-bg-light); 
+            border: 1px solid var(--header-border); 
+            box-shadow: 0 10px 30px -5px var(--shadow-color-light);
+            transform-origin: top right; 
+            overflow: hidden; 
+            will-change: opacity, transform;
+        }
+        html[data-theme="dark"] .group .dropdown-menu {
+            background-color: var(--dropdown-bg-dark); 
+        }
+
+        .group:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+        .dropdown-menu a {
+            transition: background-color 0.25s ease, color 0.25s ease, padding-left 0.25s ease; 
+            color: var(--dropdown-text-light); 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            will-change: background-color, color, padding-left;
+        }
+        html[data-theme="dark"] .dropdown-menu a {
+            color: var(--dropdown-text-dark); 
+        }
+        .dropdown-menu a:hover {
+            background-color: var(--dropdown-hover-bg-light); 
+            color: var(--dropdown-hover-text-light); 
+            padding-left: 1.5rem; 
+            
+        }
+        html[data-theme="dark"] .dropdown-menu a:hover {
+             background-color: var(--dropdown-hover-bg-dark); 
+             color: var(--dropdown-hover-text-dark); 
+        }
+        /* Active page indicator in dropdown menu */
+        .dropdown-menu a.active-page::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem; 
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%; 
+            background: var(--dropdown-item-indicator);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+        .dropdown-menu a.active-page {
+            padding-left: 1.5rem; 
+            font-weight: 600; 
+        }
+
+
+        /* Separator bar */
+        .separator-bar {
+            width: 75%;
+            max-width: 1000px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--separator-gradient-middle), transparent);
+            margin: 5rem auto; 
+            border-radius: 0.5px;
+            opacity: 0.6;
+            animation: fadeIn 1.8s ease-out;
+            will-change: opacity;
+        }
+        @media (min-width: 768px) {
+            .separator-bar {
+                margin: 7rem auto; 
+            }
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.8rem; }
+            .hero-content p { font-size: 1.05rem; }
+            
+            .hero-content .glass-container {
+                padding: 2rem 2rem; 
+            }
+            .info-card, .subsidiary-card, .investment-card, .news-card, .office-card { margin-bottom: 2rem; } 
+            .navbar-menu { display: none !important; } 
+            .navbar-menu-mobile.active { display: flex !important; } 
+            .navbar-menu-mobile a {
+                padding: 1.2rem 0; /* Larger padding for easier tapping */
+                font-size: 1.25rem; /* Larger font size */
+                text-align: center;
+            }
+            .hamburger-menu { 
+                display: block; 
+                font-size: 2.2rem; /* Larger icon */
+                padding: 0.6rem; /* Larger touch target */
+            }
+            #theme-toggle-mobile {
+                font-size: 1.8rem; /* Larger icon */
+                padding: 0.6rem; /* Larger touch target */
+            }
+            
+            .stock-chart-container {
+                height: 250px; 
+            }
+            .header-hero {
+                height: 250px; 
+                border-bottom-left-radius: 1.5rem;
+                border-bottom-right-radius: 1.5rem;
+            }
+            .header-hero-title-overlay {
+                padding: 1rem 1.5rem;
+                border-radius: 1rem; 
+            }
+            .header-hero-title-overlay h2 {
+                font-size: 2rem; 
+            }
+            .stock-info-container .flex-col.md\\:flex-row > div { 
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            .stock-info-container .flex-col.md\\:flex-row > div:last-child {
+                margin-bottom: 0;
+            }
+             .stock-info-container #blwd-current-price, .stock-info-container #bci-total-assets {
+                font-size: 2.5rem; 
+            }
+            .about-us-glass-container {
+                padding: 2rem 2rem;
+            }
+            /* Chatbot mobile adjustments */
+            #chatbot-container {
+                width: 95%;
+                max-width: 95%;
+                height: 70vh;
+                bottom: 2rem;
+                right: 2.5%;
+                left: 2.5%;
+                resize: none !important; /* Disable resize on mobile */
+                overflow: hidden !important; /* Ensure no scrollbars from resize */
+            }
+            #chatbot-open-btn {
+                bottom: 2rem; /* Position bottom right */
+                right: 2rem; /* Position bottom right */
+                top: auto; /* Reset top */
+                left: auto; /* Reset left */
+                font-size: 1.5rem;
+                width: 56px; /* Ensure perfect circle */
+                height: 56px; /* Ensure perfect circle */
+                min-width: 56px;
+                min-height: 56px;
+            }
+            .chat-message { font-size: 0.9rem; }
+            .chat-input input { font-size: 0.9rem; padding: 0.8rem; }
+            .chat-send-btn { 
+                font-size: 1.2rem; 
+                padding: 0; /* Remove padding to precisely control size with width/height */
+                width: 48px; /* Ensure perfect circle */
+                height: 48px; /* Ensure perfect circle */
+                min-width: 48px;
+                min-height: 48px;
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            
+            .stock-chart-container {
+                height: 300px;
+            }
+            .header-hero {
+                height: 300px;
+            }
+            .header-hero-title-overlay h2 {
+                font-size: 3rem; 
+            }
+            /* Chatbot tablet adjustments */
+            #chatbot-container {
+                width: 450px;
+                height: 550px;
+                resize: none !important; /* Disable resize on tablet */
+                overflow: hidden !important; /* Ensure no scrollbars from resize */
+            }
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, visibility;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: linear-gradient(150deg, var(--modal-bg-start), var(--modal-bg-end));
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--border-color);
+            border-radius: 2.25rem;
+            padding: 0;
+            max-width: 750px;
+            width: 92%;
+            max-height: 92vh;
+            overflow: hidden;
+            
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Added transform transition */
+            transform: translateY(20px) scale(0.98); /* Initial state for animation */
+            box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.6);
+            position: relative;
+            color: var(--text-color-primary);
+            display: flex;
+            flex-direction: column;
+            will-change: opacity, transform, background-color, backdrop-filter, box-shadow;
+        }
+        .modal.active .modal-content { 
+            transform: translateY(0) scale(1); /* Final state for animation */
+        }
+
+        .modal-header-fixed {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--modal-header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 10;
+            padding: 1.5rem 2rem; 
+            border-bottom: 1px solid var(--modal-header-border);
+            border-top-left-radius: 2.25rem;
+            border-top-right-radius: 2.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            will-change: background-color, backdrop-filter, border-bottom;
+        }
+         @media (min-width: 768px) {
+            .modal-header-fixed {
+                 padding: 1.75rem 2.25rem; 
+            }
+        }
+        .modal-header-fixed h3 { font-size: 1.5rem; font-weight: 700; } 
+         @media (min-width: 768px) {
+            .modal-header-fixed h3 { font-size: 1.9rem; } 
+        }
+
+
+        .modal-close-btn {
+            font-size: 1.9rem;
+            color: var(--close-btn-color);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            will-change: color, transform;
+        }
+        .modal-close-btn:hover { color: var(--icon-color); transform: rotate(90deg); }
+
+        .modal-scroll-content {
+            padding: 1.5rem 2rem; 
+            overflow-y: auto;
+            flex-grow: 1;
+            position: relative;
+        }
+         @media (min-width: 768px) {
+            .modal-scroll-content {
+                 padding: 1.75rem 2.25rem; 
+            }
+        }
+
+        .modal-scroll-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+            background: linear-gradient(to bottom, var(--modal-bg-start), transparent);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            will-change: opacity;
+        }
+        .modal-scroll-content.scrolled-top::before { opacity: 1; }
+
+        /* Modal scrollbar styles */
+        .modal-scroll-content::-webkit-scrollbar { width: 7px; height: 7px; }
+        .modal-scroll-content::-webkit-scrollbar-track { background: var(--scroll-track); border-radius: 3.5px; }
+        .modal-scroll-content::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3.5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }
+
+        /* Particle canvas background */
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Theme toggle button */
+        #theme-toggle, #theme-toggle-mobile {
+            background-color: transparent;
+            border: none;
+            color: var(--theme-toggle-color);
+            font-size: 1.3rem; 
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.5rem;
+            will-change: color, transform;
+        }
+        @media (min-width: 768px) {
+            #theme-toggle, #theme-toggle-mobile {
+                 font-size: 1.4rem; 
+            }
+        }
+        #theme-toggle:hover, #theme-toggle-mobile:hover { color: var(--icon-color); transform: scale(1.1) rotate(15deg); }
+        .theme-toggle-icon-animate { animation: rotateScale 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        /* Theme toggle button rotation animation */
+        @keyframes rotateScale {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(0.4) rotate(180deg); opacity: 0; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--footer-border-top);
+            padding-top: 3rem; 
+            padding-bottom: 1.5rem; 
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            transition: background-color 0.5s ease, color 0.5s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            will-change: background-color, color, backdrop-filter;
+        }
+         @media (min-width: 768px) {
+             footer {
+                padding-top: 3.5rem; 
+                padding-bottom: 2rem; 
+            }
+        }
+        footer a { color: var(--footer-text); transition: color 0.3s ease; }
+        footer a:hover { color: var(--footer-link-hover); }
+        .footer-signature {
+            font-size: 0.75rem; 
+            color: var(--footer-text);
+            margin-top: 2rem; 
+            opacity: 0.7;
+        }
+         @media (min-width: 768px) {
+            .footer-signature {
+                font-size: 0.8rem; 
+                margin-top: 2.5rem; 
+            }
+        }
+
+
+        /* Styles for logos in subsidiary modals */
+        .modal-scroll-content .logo-container .dynamic-logo-img.modal-logo-display { 
+            max-height: 15rem; 
+            width: auto;
+            max-width: 90%; 
+            object-fit: contain;
+            margin-bottom: 1.25rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .modal-scroll-content .logo-container .dynamic-logo-img.modal-logo-display {
+                max-height: 18rem; 
+            }
+        }
+        .modal-scroll-content .logo-container .fallback-icon-element.modal-icon-large { 
+            font-size: 8rem; 
+            margin-bottom: 1.25rem;
+        }
+         @media (min-width: 768px) {
+            .modal-scroll-content .logo-container .fallback-icon-element.modal-icon-large {
+                font-size: 10rem; 
+            }
+        }
+
+
+        /* Stock chart specific styles */
+        .stock-info-container {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 45px 0 var(--shadow-color-light);
+            padding: 1.5rem; 
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+            will-change: background-color, backdrop-filter, box-shadow;
+        }
+        html[data-theme="dark"] .stock-info-container {
+            border: 1px solid var(--border-color-darker); 
+        }
+         @media (min-width: 768px) {
+            .stock-info-container {
+                padding: 2.5rem; 
+            }
+        }
+
+        .stock-chart-container {
+            width: 100%;
+            height: 250px; 
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; 
+            background-color: rgba(var(--card-bg-rgb), 0.05); 
+            border-radius: 1rem;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.07);
+            overflow: hidden; 
+            position: relative; 
+        }
+        @media (min-width: 768px) {
+            .stock-chart-container {
+                height: 350px; 
+                margin-top: 2rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .stock-chart-container svg {
+            width: 100%;
+            height: 100%;
+        }
+        .stock-chart-container .line {
+            fill: none;
+            stroke: url(#line-gradient-blwd); 
+            stroke-width: 2.5px;
+            stroke-linecap: round;
+        }
+        
+        .stock-chart-container .line-bci { 
+            fill: none;
+            stroke: url(#line-gradient-bci); 
+            stroke-width: 2.5px;
+            stroke-linecap: round;
+        }
+
+        .stock-chart-container .axis path,
+        .stock-chart-container .axis line {
+            stroke: var(--chart-axis-color);
+            stroke-width: 1px;
+            shape-rendering: crispEdges;
+        }
+        .stock-chart-container .axis text {
+            fill: var(--text-color-secondary);
+            font-size: 0.7rem; 
+            font-family: 'Inter', sans-serif;
+        }
+         @media (min-width: 768px) {
+            .stock-chart-container .axis text {
+                font-size: 0.75rem; 
+            }
+        }
+        .stock-chart-container .grid line {
+            stroke: var(--border-color);
+            stroke-opacity: 0.4;
+            shape-rendering: crispEdges;
+        }
+
+        /* Tooltip styles */
+        .tooltip-circle {
+            fill: var(--icon-color);
+            stroke: var(--tooltip-bg);
+            stroke-width: 2px;
+        }
+        .tooltip-line {
+            stroke: var(--icon-color);
+            stroke-width: 1px;
+            stroke-dasharray: 3,3;
+        }
+        .tooltip-group {
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+            pointer-events: none; 
+            will-change: opacity;
+        }
+        .tooltip-group.active {
+            opacity: 1;
+        }
+        .tooltip-rect {
+            fill: var(--tooltip-bg);
+            rx: 8; 
+            ry: 8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+            transition: fill 0.3s ease; 
+        }
+        html[data-theme="dark"] .tooltip-rect {
+            fill: var(--tooltip-bg); 
+        }
+        .tooltip-text {
+            fill: var(--tooltip-text);
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            text-anchor: middle;
+            transition: fill 0.3s ease; 
+        }
+        html[data-theme="dark"] .tooltip-text {
+            fill: var(--tooltip-text); 
+        }
+
+        /* New Header Hero Section Styles */
+        .header-hero {
+            position: relative;
+            width: 100%;
+            height: 280px; 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            border-bottom-left-radius: 2rem; 
+            border-bottom-right-radius: 2rem;
+            box-shadow: 0 10px 40px -5px rgba(0,0,0,0.2); 
+            margin-bottom: 3rem; 
+            transform: translateY(-16px); 
+            opacity: 0; 
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.8s ease-out;
+            
+            background-attachment: scroll; 
+            will-change: transform, opacity;
+        }
+        @media (min-width: 768px) {
+            .header-hero {
+                height: 350px; 
+                margin-bottom: 4rem; 
+            }
+        }
+
+
+        .header-hero.is-visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .header-hero-title-overlay {
+            padding: 1.2rem 2rem; 
+            background-color: rgba(var(--card-bg-rgb), 0.7); 
+            backdrop-filter: blur(30px); 
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 1.5rem; 
+            box-shadow: 0 8px 30px -5px rgba(0,0,0,0.25); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--text-color-primary);
+            position: relative; 
+            max-width: 90%; 
+            will-change: background-color, backdrop-filter, box-shadow;
+        }
+        @media (min-width: 768px) {
+            .header-hero-title-overlay {
+                 padding: 1.5rem 3rem; 
+            }
+        }
+
+        .header-hero-title-overlay h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.5rem; 
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+        }
+        @media (min-width: 768px) {
+            .header-hero-title-overlay h2 {
+                 font-size: 4rem; 
+            }
+        }
+
+        /* Organization Chart Styles */
+        .org-chart-container {
+            background-color: var(--org-chart-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 2.25rem; 
+            padding: 1.5rem; 
+            margin-top: 3rem;
+            box-shadow: 0 15px 50px -5px var(--shadow-color-light);
+            border: 1px solid var(--border-color);
+            will-change: background-color, backdrop-filter, box-shadow;
+        }
+         @media (min-width: 768px) {
+            .org-chart-container {
+                padding: 2rem; 
+            }
+        }
+        .org-chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            display: block; 
+            transition: filter 0.6s ease-in-out; 
+            will-change: filter;
+        }
+        html[data-theme="dark"] .org-chart-container img {
+             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Modal Office Image */
+        .modal-office-image {
+            width: 100%;
+            height: 16rem; /* 256px */
+            object-fit: cover;
+            border-radius: 0.75rem; /* rounded-lg */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+         @media (min-width: 768px) {
+            .modal-office-image {
+                height: 20rem; /* 320px */
+            }
+        }
+
+        /* Chatbot Styles */
+        #chatbot-open-btn {
+            position: fixed;
+            bottom: 2rem; /* Changed to bottom-right */
+            right: 2rem; /* Changed to bottom-right */
+            top: auto; /* Reset top */
+            left: auto; /* Reset left */
+            width: 60px;
+            height: 60px;
+            min-width: 60px; /* Ensure perfect circle even with padding */
+            min-height: 60px;
+            border-radius: 50%; /* Perfectly round */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--button-text-light);
+            background: linear-gradient(135deg, var(--icon-color), var(--secondary-accent-color));
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            z-index: 990; /* Adjusted z-index to be below chatbot container */
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease, background 0.3s ease;
+            will-change: transform, box-shadow;
+        }
+        #chatbot-open-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+        }
+        html[data-theme="dark"] #chatbot-open-btn {
+            background: linear-gradient(135deg, var(--secondary-accent-color), var(--icon-color));
+        }
+
+        #chatbot-container {
+            position: fixed;
+            bottom: 2rem; /* Aligned with open button */
+            right: 2rem; /* Aligned with open button */
+            width: 400px; /* Default width for desktop */
+            height: 500px; /* Default height for desktop */
+            min-width: 300px; /* Minimum width for resizing */
+            min-height: 400px; /* Minimum height for resizing */
+            background-color: var(--chatbot-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 1.75rem; /* Increased border radius for more homogeneity */
+            box-shadow: 0 15px 45px var(--chatbot-shadow);
+            border: 1px solid var(--chatbot-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content stays within bounds */
+            z-index: 1000; /* Adjusted z-index to be above chatbot open button */
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease, visibility 0.4s ease;
+            will-change: transform, opacity, visibility, width, height; /* Add width/height to will-change */
+
+            /* Resizable properties for desktop */
+            resize: both;
+            overflow: auto; 
+        }
+        #chatbot-container.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Disable resize on mobile */
+        @media (max-width: 768px) {
+            #chatbot-container {
+                resize: none !important;
+                overflow: hidden !important; /* Ensure no scrollbars from resize */
+            }
+        }
+
+        .chatbot-header {
+            background-color: var(--chat-header-bg);
+            padding: 1.25rem 1.75rem; /* Adjusted padding for better fit */
+            border-bottom: 1px solid var(--chatbot-border);
+            display: flex;
+            justify-content: space-between; /* Ensures space between title and buttons */
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-color-primary);
+            cursor: grab; /* Cursor for dragging */
+        }
+        
+        /* Removed .ai-icon styles as requested */
+
+        /* Control buttons (close and reset) */
+        .chatbot-header .chat-control-btn {
+            width: 38px; /* Slightly larger for better touch target */
+            height: 38px; /* Slightly larger for better touch target */
+            min-width: 38px;
+            min-height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem; /* Slightly larger icon */
+            transition: all 0.25s ease-in-out;
+            color: var(--button-text-light); /* Consistent text color */
+            background: linear-gradient(95deg, var(--button-bg-light-start), var(--button-bg-light-end)); /* Use main button gradient */
+            box-shadow: 0 5px 15px -3px var(--button-shadow-light); /* Use main button shadow */
+            border: none; /* No border for consistent look */
+            will-change: transform, box-shadow, background, color;
+        }
+        html[data-theme="dark"] .chatbot-header .chat-control-btn {
+            background: linear-gradient(95deg, var(--button-bg-dark-start), var(--button-bg-dark-end));
+            box-shadow: 0 5px 15px -3px var(--button-shadow-dark);
+            color: var(--button-text-dark);
+        }
+
+        .chatbot-header .chat-control-btn:hover {
+            transform: translateY(-2px) scale(1.05); /* Slight lift and scale */
+            box-shadow: 0 8px 20px -4px var(--button-hover-shadow-light); /* Enhanced shadow on hover */
+            color: var(--button-text-light); /* Keep text color consistent */
+        }
+        html[data-theme="dark"] .chatbot-header .chat-control-btn:hover {
+            box-shadow: 0 8px 20px -4px var(--button-hover-shadow-dark);
+            color: var(--button-text-dark);
+        }
+
+        .chatbot-header .chat-control-btn:active {
+            transform: translateY(0) scale(0.98); /* Press effect */
+            box-shadow: 0 3px 8px -2px var(--button-shadow-light); /* Pressed shadow */
+        }
+        html[data-theme="dark"] .chatbot-header .chat-control-btn:active {
+            box-shadow: 0 3px 8px -2px var(--button-shadow-dark);
+        }
+
+        .chatbot-header .reset-btn { margin-left: 0.75rem; }
+
+
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 1.25rem 1.75rem; /* Increased padding */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem; /* Increased gap between messages */
+            color: var(--chat-message-text);
+        }
+
+        .chat-message {
+            max-width: 90%;
+            padding: 0.8rem 1.2rem; /* Adjusted padding */
+            border-radius: 1.5rem; /* More rounded */
+            line-height: 1.5;
+            word-wrap: break-word;
+            font-size: 0.98rem; /* Slightly larger font */
+            box-shadow: var(--chat-message-shadow); /* Softer shadow */
+            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+            transform: translateY(10px); /* Initial state for entry animation */
+            opacity: 0;
+            position: relative; /* Needed for reply icon positioning */
+            border: 1px solid var(--chatbot-border); /* Stronger border for messages */
+        }
+        .chat-message.user {
+            background-color: var(--chat-message-user-bg);
+            align-self: flex-end;
+            border-bottom-right-radius: 0.5rem; /* Adjusted for consistency */
+            animation: fadeInFromBottom 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            box-shadow: var(--chat-message-shadow); /* Ensure user messages also have softer shadow */
+        }
+        .chat-message.ai {
+            background-color: var(--chat-message-ai-bg);
+            align-self: flex-start;
+            border-bottom-left-radius: 0.5rem; /* Adjusted for consistency */
+            filter: blur(8px); /* Initial blur */
+            opacity: 0; /* Initial opacity */
+            box-shadow: var(--chat-message-ai-shadow); /* Lighter shadow for AI messages */
+        }
+        .chat-message.ai.active-animation {
+            animation: unblurIn 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; /* Animation for unblur and fade in */
+        }
+
+        /* Reply icon within messages */
+        .chat-message .reply-icon {
+            position: absolute;
+            bottom: 6px; /* Adjusted position */
+            right: 10px; /* Adjusted position */
+            font-size: 0.8rem; /* Slightly larger */
+            color: var(--chat-reply-icon-color);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(5px);
+            background-color: rgba(var(--card-bg-rgb), 0.4); /* Background for icon */
+            border-radius: 50%;
+            padding: 4px; /* Larger padding */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chat-message.user .reply-icon {
+            left: 10px; /* Align reply icon to the left for user messages */
+            right: auto;
+        }
+
+        .chat-message:hover .reply-icon {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Reply context bar */
+        #chat-reply-context {
+            background-color: var(--chat-input-bg);
+            border-top: 1px solid var(--chat-input-border);
+            padding: 0.6rem 1.5rem; /* Adjusted padding */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem; /* Slightly larger font */
+            color: var(--text-color-secondary);
+            border-bottom: 1px solid var(--chat-input-border);
+            max-height: 60px; /* Limit height to prevent large quotes */
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transform: translateY(100%); /* Start off-screen */
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+        #chat-reply-context.active {
+            transform: translateY(0); /* Slide in */
+            opacity: 1;
+        }
+
+        #chat-reply-context .reply-text {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 1rem;
+            border-left: 4px solid var(--icon-color); /* Thicker border */
+            padding-left: 0.75rem; /* Increased padding */
+        }
+
+        #chat-reply-context .clear-reply {
+            font-size: 1.3rem; /* Slightly larger */
+            cursor: pointer;
+            color: var(--chat-reply-icon-color);
+            transition: color 0.2s ease;
+        }
+        #chat-reply-context .clear-reply:hover {
+            color: var(--close-btn-color);
+        }
+
+
+        @keyframes fadeInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes unblurIn {
+            0% {
+                opacity: 0;
+                filter: blur(8px);
+                transform: translateY(10px);
+            }
+            50% {
+                opacity: 0.8;
+                filter: blur(4px);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0px);
+                transform: translateY(0);
+            }
+        }
+
+
+        .chat-input {
+            padding: 1.25rem 1.75rem; /* Adjusted padding to match header */
+            border-top: 1px solid var(--chatbot-border);
+            display: flex;
+            align-items: center; /* Vertically align input and button */
+            gap: 0.85rem; /* Consistent gap */
+        }
+        .chat-input input {
+            flex-grow: 1;
+            height: 54px; /* Set explicit height to match button, considering padding */
+            padding: 0 1.2rem; /* Adjusted padding, vertical padding set by height */
+            border-radius: 1.7rem; /* More rounded to match container */
+            border: 1px solid var(--chat-input-border);
+            background-color: var(--chat-input-bg);
+            color: var(--text-color-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-sizing: border-box; /* Include padding and border in height calculation */
+        }
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--chat-input-border-focus);
+            box-shadow: 0 0 0 4px var(--chat-input-shadow-focus); /* Stronger focus shadow */
+        }
+        
+        /* Send button styling */
+        .chat-send-btn {
+            width: 54px; /* Matches input height */
+            height: 54px; /* Matches input height */
+            min-width: 54px;
+            min-height: 54px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.4rem; /* Adjusted icon size */
+            transition: all 0.25s ease-in-out;
+            color: var(--chat-button-text);
+            background: linear-gradient(135deg, var(--icon-color), var(--secondary-accent-color)); /* Gradient background */
+            box-shadow: 0 5px 15px -3px var(--button-shadow-light); /* Use main button shadow */
+            border: none;
+            will-change: transform, box-shadow, background-color, color;
+        }
+        html[data-theme="dark"] .chat-send-btn {
+            background: linear-gradient(135deg, var(--secondary-accent-color), var(--icon-color)); /* Reversed gradient for dark mode */
+            box-shadow: 0 5px 15px -3px var(--button-shadow-dark);
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px -4px var(--button-hover-shadow-light);
+        }
+        html[data-theme="dark"] .chat-send-btn:hover {
+            box-shadow: 0 8px 20px -4px var(--button-hover-shadow-dark);
+        }
+
+        .chat-send-btn:active {
+            transform: scale(0.95);
+            box-shadow: inset 0 3px 8px -2px rgba(0,0,0,0.2); /* Inner shadow for pressed state */
+        }
+        html[data-theme="dark"] .chat-send-btn:active {
+            box-shadow: inset 0 3px 8px -2px rgba(255,255,255,0.1);
+        }
+
+
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--chat-loading-spinner);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            align-self: center; /* Center spinner within the button */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="navbar fixed top-0 left-0 w-full z-50 py-3 shadow-md">
+        <nav class="container mx-auto flex justify-between items-center px-4">
+            <a href="#" onclick="event.preventDefault(); navigate('home')" class="navbar-logo hover:opacity-80 transition duration-300 mr-auto md:mr-6">
+                <span>BlackWood</span>
+            </a>
+
+            <div class="hidden md:flex flex-grow justify-end items-center space-x-1 lg:space-x-2">
+                <a href="#" onclick="event.preventDefault(); navigate('home')" class="navbar-link" id="nav-link-home">Accueil</a>
+                <div class="relative group">
+                    <button class="navbar-link flex items-center focus:outline-none" id="nav-link-group" onclick="event.preventDefault(); navigate('group')">
+                        Le Groupe <i class="fas fa-chevron-down ml-1.5 text-xs opacity-70"></i>
+                    </button>
+                    <div class="absolute dropdown-menu rounded-xl py-2 mt-2 w-56 z-20 right-0">
+                        <a href="#" onclick="event.preventDefault(); navigate('subsidiaries')" class="block px-5 py-2.5 text-sm" data-category="subsidiaries" id="nav-link-subsidiaries">Nos Filiales</a>
+                        <a href="#" onclick="event.preventDefault(); navigate('market-news')" class="block px-5 py-2.5 text-sm" data-category="market-news" id="nav-link-market-news">Actualités Boursières</a>
+                        <a href="#" onclick="event.preventDefault(); navigate('global-network')" class="block px-5 py-2.5 text-sm" data-category="global-network" id="nav-link-global-network">Notre Réseau Global</a>
+                    </div>
+                </div>
+                <a href="https://sites.google.com/view/blackwood-royal-motors?usp=sharing" target="_blank" class="navbar-link">BW Royal Motors</a>
+                <button id="theme-toggle" class="ml-2 lg:ml-4 p-2 rounded-full transition-colors duration-300">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+
+            <div class="md:hidden flex items-center ml-auto">
+                <button id="theme-toggle-mobile" class="mr-2 p-2 rounded-full transition-colors duration-300">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="text-2xl focus:outline-none hamburger-menu" id="hamburger-menu" style="color: var(--text-color-primary);">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+        <div class="md:hidden navbar-menu-mobile hidden flex-col items-center mt-3 space-y-2 py-4 shadow-lg" style="background-color: var(--card-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+            <a href="#" onclick="event.preventDefault(); navigate('home'); closeMobileMenu();" class="navbar-link w-full text-center py-3">Accueil</a>
+            <a href="#" onclick="event.preventDefault(); navigate('group'); closeMobileMenu();" class="navbar-link w-full text-center py-3">Le Groupe</a>
+            <a href="#" onclick="event.preventDefault(); navigate('subsidiaries'); closeMobileMenu();" class="navbar-link w-full text-center py-3">Nos Filiales</a>
+            <a href="#" onclick="event.preventDefault(); navigate('market-news'); closeMobileMenu();" class="navbar-link w-full text-center py-3">Actualités Boursières</a>
+            <a href="#" onclick="event.preventDefault(); navigate('global-network'); closeMobileMenu();" class="navbar-link w-full text-center py-3">Notre Réseau Global</a>
+            <a href="https://sites.google.com/view/blackwood-royal-motors?usp=sharing" target="_blank" class="navbar-link w-full text-center py-3">BW Royal Motors</a>
+        </div>
+    </header>
+
+    <main id="app-content" class="min-h-screen pt-16 transition-all duration-500 ease-in-out"></main>
+
+    <footer class="py-10 text-center text-sm">
+        <div class="container mx-auto px-4">
+            <p class="mb-3">Copyright © 2025 BlackWood Evermont – Tous droits réservés. Reproduction totale ou partielle interdite sans autorisation écrite préalable. BlackWood® est une marque déposée.</p>
+            <div class="flex justify-center space-x-5 mt-3 mb-5">
+                <a href="https://discord.gg/88peMJRz95" target="_blank" class="hover:opacity-70 transition duration-300"><i class="fab fa-discord text-lg"></i></a>
+            </div>
+            <p class="footer-signature">Made with precision by BlackWood Brand & Design</p>
+        </div>
+    </footer>
+
+    <div id="subsidiary-modal-template" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header-fixed">
+                <h3 class="text-3xl font-bold modal-title" style="color: var(--text-color-primary);"></h3>
+                <span class="modal-close-btn">&times;</span>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="text-center mb-6 logo-container">
+                    </div>
+                <p class="text-lg modal-description" style="color: var(--text-color-secondary); line-height: 1.75;"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="office-detail-modal-template" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header-fixed">
+                <h3 class="text-3xl font-bold modal-title" style="color: var(--text-color-primary);"></h3>
+                <span class="modal-close-btn">&times;</span>
+            </div>
+            <div class="modal-scroll-content">
+                <img src="" alt="Image du bureau" class="modal-office-image w-full h-64 object-cover rounded-lg mb-6">
+                <h4 class="text-2xl font-semibold mb-1 modal-office-location-text" style="color: var(--text-color-primary);"></h4>
+                <p class="text-sm font-medium mb-4 modal-office-creation-date" style="color: var(--text-color-secondary);"></p>
+                <p class="text-md modal-office-history leading-relaxed" style="color: var(--text-color-secondary);"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="history-modal-template" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header-fixed">
+                <h3 class="text-3xl font-bold modal-title" style="color: var(--text-color-primary);"></h3>
+                <span class="modal-close-btn">&times;</span>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="text-center mb-6">
+                    <i class="fas fa-scroll text-gradient-primary text-6xl mb-4"></i>
+                    <h4 class="text-2xl font-bold" style="color: var(--text-color-primary);">L'Épopée de BlackWood</h4>
+                </div>
+                <div class="text-lg modal-history-content" style="color: var(--text-color-secondary); line-height: 1.8;">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot UI -->
+    <button id="chatbot-open-btn" class="chatbot-open-btn">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <div id="chatbot-container" class="">
+        <div class="chatbot-header">
+            <div class="flex items-center">
+                <!-- Removed the AI icon as requested -->
+                <span>Assistant IA BlackWood</span>
+            </div>
+            <div class="flex items-center ml-auto space-x-2">
+                <button id="chat-reset-btn" class="chat-control-btn reset-btn" title="Réinitialiser la discussion">
+                    <i class="fas fa-arrows-rotate"></i>
+                </button>
+                <button class="chat-control-btn close-btn" title="Fermer l'assistant">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Messages will be appended here -->
+            <div class="chat-message ai active-animation" data-message-id="initial-greeting" data-sender="ai">Bonjour ! Je suis votre assistant IA BlackWood. Comment puis-je vous aider aujourd'hui ?<i class="fas fa-reply reply-icon"></i></div>
+        </div>
+        <div id="chat-reply-context" class="hidden">
+            <span class="reply-text"></span>
+            <i class="fas fa-times clear-reply"></i>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Posez votre question..." aria-label="Zone de saisie de la question">
+            <button id="chat-send-btn" class="chat-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Application Data ---
+        const groupPolesData = [
+            {
+                id: 'capital-investment',
+                name: 'BlackWood Capital Investment',
+                description: "BlackWood Capital Investment est le bras financier du groupe, spécialisé dans la gestion d’actifs, le rachat d’actions et l’investissement stratégique. Avec une approche visionnaire, nous maximisons la croissance et la rentabilité à l’échelle mondiale.",
+                logoLightUrl: 'https://i.imgur.com/rThksT4.png',
+                logoDarkUrl: 'https://i.imgur.com/tnYxUqs.png',
+                fallbackIconClass: 'fas fa-landmark',
+                actionButtonText: "Voir nos performances",
+                actionLink: 'market-news'
+            },
+            {
+                id: 'global-services',
+                name: 'BlackWood Global Services',
+                description: "BlackWood Global Services propose une gamme complète de services aux entreprises et particuliers, allant du branding à l’événementiel, en passant par la décoration et le conseil. Nous simplifions le quotidien avec expertise et innovation.",
+                logoLightUrl: 'https://i.imgur.com/eGMgPDV.png',
+                logoDarkUrl: 'https://i.imgur.com/j8tjNVH.png',
+                fallbackIconClass: 'fas fa-concierge-bell',
+                actionButtonText: "Explorer nos services",
+                actionLink: 'subsidiaries'
+            }
+        ];
+
+        const subsidiariesData = [
+            { id: 'royal-motors', name: 'BlackWood Royal Motors', description: "Votre concessionnaire de prestige pour véhicules d'exception. Nous offrons une sélection exclusive et un service sur-mesure, pour une expérience automobile qui dépasse vos attentes.", fullDescription: "BlackWood Royal Motors est votre destination exclusive pour des véhicules d'exception, où le luxe et la performance se rencontrent. Nous sélectionnons méticuleusement chaque modèle pour offrir une expérience automobile inégalée. Notre engagement va au-delà de la vente, avec un service après-vente sur-mesure et une attention personnalisée à chaque détail, garantissant une satisfaction totale à nos clients les plus exigeants.", iconClass: 'fas fa-car-alt', logoLightUrl: 'https://i.imgur.com/KzaUQ70.png', logoDarkUrl: 'https://i.imgur.com/NCIp9WB.png' },
+            { id: 'brand-design', name: 'BlackWood Brand & Design', description: "Artisans de votre image, nous concevons des identités de marque percutantes. Notre studio allie créativité audacieuse et stratégie pointue pour un impact mémorable.", fullDescription: "BlackWood Brand & Design est le studio où la créativité rencontre la stratégie pour façonner des identités de marque inoubliables. Nous travaillons en étroite collaboration avec nos clients pour comprendre leur vision et leurs objectifs, puis nous concevons des solutions uniques qui propulsent leur marque sur le marché. De la conception graphique à la stratégie de communication, en passant par la création de sites web sur-mesure avec un design innovant et performant, chaque projet est une œuvre d'art pensée pour un impact maximal et une reconnaissance durable.", iconClass: 'fas fa-palette', logoLightUrl: 'https://i.imgur.com/61HgdQ4.png', logoDarkUrl: 'https://i.imgur.com/0sJpybi.png' },
+            { id: 'events', name: 'BlackWood Events', description: "Créateurs d'instants inoubliables, nous orchestrons vos événements sur-mesure. De la conception à la réalisation, notre excellence garantit des moments d'exception.", fullDescription: "BlackWood Events est votre partenaire privilégié pour la création d'événements sur-mesure, qu'ils soient d'entreprise, privés ou grand public. Notre équipe dédiée allie créativité débordante et excellence opérationnelle pour concevoir des expériences véritablement inoubliables. De la planification initiale à la coordination le jour J, chaque détail est méticuleusement soigné pour garantir un succès total et laisser une impression durable sur tous les participants.", iconClass: 'fas fa-calendar-days', logoLightUrl: 'https://i.imgur.com/FulhAXJ.png', logoDarkUrl: 'https://i.imgur.com/m6JqorW.png' },
+            { id: 'photography', name: 'BlackWood Photography', description: "Notre œil expert immortalise vos moments précieux. Nous capturons l'essence de chaque instant avec une sensibilité artistique et une qualité professionnelle irréproquable.", fullDescription: "BlackWood Photography se dédie à l'art de capturer l'essence de chaque instant avec une approche à la fois artistique et profondément professionnelle. Nos photographes experts transforment les moments éphémères en souvenirs intemporels, qu'il s'agisse de portraits, d'événements, de campagnes publicitaires ou de reportages. Nous nous engageons à fournir des services photographiques exceptionnels qui racontent une histoire et évoquent des émotions, pour des moments véritablement inoubliables.", iconClass: 'fas fa-camera-retro', logoLightUrl: 'https://i.imgur.com/qYbEYc9.png', logoDarkUrl: 'https://i.imgur.com/BUGWCcT.png' },
+            { id: 'racing-team', name: 'BlackWood Racing Team', description: "La performance à son paroxysme. Notre écurie repousse les limites de la vitesse et de l'innovation technologique sur les circuits les plus exigeants du monde.", fullDescription: "Le BlackWood Racing Team incarne l'alliance parfaite entre performance, innovation et passion pour la vitesse. Sur la piste, nous repoussons constamment les limites de l'ingénierie et de la technologie automobile pour atteindre des résultats exceptionnels en compétition. Notre équipe est composée d'ingénieurs de pointe, de pilotes d'élite et de stratèges dévoués, tous unis par la quête de l'excellence et la volonté de dominer chaque course.", iconClass: 'fas fa-flag-checkered', logoLightUrl: 'https://i.imgur.com/zr1WEqI.png', logoDarkUrl: 'https://i.imgur.com/GiNa7LA.png' },
+            { id: 'transport', name: 'BlackWood Transport', description: "Logistique d'excellence pour vos biens les plus précieux. Nous assurons un transport fiable, sécurisé et efficace de vos marchandises, fonds et véhicules, partout dans le monde.", fullDescription: "BlackWood Transport offre un service de transport de haute fiabilité et une sécurité inégalée pour vos marchandises, fonds précieux et véhicules de valeur. Grâce à une logistique optimisée et une flotte moderne, nous garantissons un transport rapide et efficace, que ce soit au niveau local ou international. Notre priorité est la tranquillité d'esprit de nos clients, assurée par un suivi rigoureux et une équipe expérimentée prête à répondre à tous vos besoins logistiques, où que vous soyez.", iconClass: 'fas fa-truck-fast', logoLightUrl: 'https://i.imgur.com/GMhRQaJ.png', logoDarkUrl: 'https://i.imgur.com/05AoBaW.png' }
+        ];
+
+        const majorInvestmentsData = [
+            // Nvidia now uses Font Awesome icon for consistent gradient effect
+            { company: "Nvidia Corporation (NVDA)", fallbackIconClass: "fas fa-microchip", sector: "Semi-conducteurs, IA", ownershipPercentage: 0, fictionalSharePrice: 1000, totalCompanyShares: 2500000000 },
+            { company: "Microsoft Corporation (MSFT)", fallbackIconClass: "fab fa-microsoft", sector: "Logiciels, Cloud, IA", ownershipPercentage: 0, fictionalSharePrice: 420, totalCompanyShares: 7500000000 },
+            { company: "Apple Inc. (AAPL)", fallbackIconClass: "fab fa-apple", sector: "Électronique Grand Consumer, Logiciels", ownershipPercentage: 0, fictionalSharePrice: 180, totalCompanyShares: 15000000000 },
+            { company: "Amazon.com, Inc. (AMZN)", fallbackIconClass: "fab fa-amazon", sector: "E-commerce, Cloud", ownershipPercentage: 0, fictionalSharePrice: 190, totalCompanyShares: 10000000000 },
+            { company: "Alphabet Inc. (GOOGL)", fallbackIconClass: "fab fa-google", sector: "Recherche Internet, IA, Cloud", ownershipPercentage: 0, fictionalSharePrice: 170, totalCompanyShares: 12000000000 },
+            { company: "Meta Platforms (META)", fallbackIconClass: "fab fa-meta", sector: "Réseaux Sociaux, Réalité Virtuelle", ownershipPercentage: 0, fictionalSharePrice: 500, totalCompanyShares: 2700000000 }
+        ];
+
+        function getRandomOwnershipPercentage() {
+            return (Math.random() * (8.7 - 3.5) + 3.5).toFixed(2);
+        }
+
+        majorInvestmentsData.forEach(investment => {
+            investment.ownershipPercentage = parseFloat(getRandomOwnershipPercentage());
+        });
+
+        const internationalOfficesData = [
+            { id: 'zurich', name: 'BlackWood (Siège Social)', location: 'Zurich, Suisse', description: 'Le cœur stratégique et administratif de BlackWood, coordonnant toutes les opérations mondiales.', iconClass: 'fas fa-building', imageUrl: 'https://www.pixel4k.com/wp-content/uploads/2018/09/zurich-switzerland-roofs-buildings-sky-4k_1538068513.jpg', creationDate: '2009', history: "Fondé en 2009, le siège de Zurich est le berceau de BlackWood. C'est ici que la vision a pris forme, orchestrant la croissance mondiale et incarnant l'excellence et la discrétion suisses. Il supervise l'ensemble des opérations et définit les orientations stratégiques du groupe." },
+            { id: 'paris', name: 'BlackWood France', location: 'Paris, France', description: 'Pôle d\'innovation et de luxe, gérant nos activités en Europe du Sud.', iconClass: 'fas fa-city', imageUrl: 'https://wallpaperaccess.com/full/1192325.jpg', creationDate: '2016', history: "Ouvert en 2016 pour capter l'effervescence du luxe et de l'innovation européenne, le bureau de Paris est rapidement devenu un hub stratégique pour nos opérations en Europe du Sud, notamment dans les secteurs de la mode, du design et des services haut de gamme." },
+            { id: 'berlin', name: 'BlackWood Germany', location: 'Berlin, Allemagne', description: 'Centre financier majeur pour l\'Europe centrale, axé sur la technologie et l\'ingénierie.', iconClass: 'fas fa-industry', imageUrl: 'https://images2.alphacoders.com/542/thumb-1920-542288.jpg', creationDate: '2017', history: "Inauguré en 2017, le bureau de Berlin est notre fer de lance technologique en Europe centrale. Il se concentre sur les investissements dans les deep-techs, l'intelligence artificielle et l'ingénierie de précision, stimulant l'innovation au sein du groupe." },
+            { id: 'rome', name: 'BlackWood Italy', location: 'Rome, Italie', description: 'Spécialisé dans la mode, le design et les investissements culturels.', iconClass: 'fas fa-store', imageUrl: 'https://wallpaperaccess.com/full/3237692.jpg', creationDate: '2018', history: "Établi en 2018, le bureau de Rome est notre ambassadeur du style et de l'art de vivre. Il gère nos investissements dans le patrimoine culturel, le design italien et les marques de luxe, enrichissant le portefeuille du groupe avec une touche d'élégance intemporelle." },
+            { id: 'london', name: 'BlackWood UK', location: 'Londres, Royaume-Uni', description: 'Hub financier et technologique, couvrant les marchés du Royaume-Uni et de l\'Irlande.', iconClass: 'fas fa-landmark', imageUrl: 'https://wallpapercave.com/wp/wp6907274.jpg', creationDate: '2015', history: "Point d'ancrage financier majeur depuis 2015, le bureau de Londres connecte BlackWood aux marchés financiers globaux, spécialisé dans la gestion d'actifs, le capital-investissement et les technologies financières (FinTech)." },
+            { id: 'sanfrancisco', name: 'BlackWood USA', location: 'San Francisco, États-Unis', description: 'Notre plus grande présence en Amérique du Nord, moteur de croissance et d\'innovation.', iconClass: 'fas fa-dollar-sign', imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/07/59/architecture-1868265_1280.jpg', creationDate: '2017', history: "Notre porte d'entrée sur la Silicon Valley depuis 2017. Le bureau de San Francisco est au cœur de nos ambitions technologiques nord-américaines, investissant dans les startups de la tech, l'IA, et les biotechnologies." },
+            { id: 'ottawa', name: 'BlackWood Canada', description: 'Concentré sur les ressources naturelles, la finance et les technologies émergentes.', iconClass: 'fas fa-leaf', imageUrl: 'https://wallpaperaccess.com/full/1728716.jpg', creationDate: '2019', history: "Ouvert en 2019, le bureau d'Ottawa se concentre sur les investissements dans les ressources durables, les énergies renouvelables et les technologies propres, reflétant notre engagement pour un avenir responsable au Canada." },
+            { id: 'sydney', name: 'BlackWood Australia', location: 'Sydney, Australie', description: 'Porte d\'entrée vers l\'Asie-Pacifique, avec un accent sur l\'énergie et les infrastructures.', iconClass: 'fas fa-globe-asia', imageUrl: 'https://wallpaperaccess.com/full/2093424.jpg', creationDate: '2020', history: "Depuis 2020, le bureau de Sydney est notre tête de pont en Asie-Pacifique, pilotant nos investissements dans les infrastructures, l'immobilier et les ressources naturelles, avec une vision tournée vers la croissance régionale." },
+            { id: 'tokyo', name: 'BlackWood Japan', location: 'Tokyo, Japon', description: 'Leader dans l\'innovation technologique et les partenariats stratégiques en Asie.', iconClass: 'fas fa-robot', imageUrl: 'https://wallpaperaccess.com/full/26364.jpg', creationDate: '2018', history: "Au cœur de l'innovation asiatique depuis 2018, le bureau de Tokyo est un centre névralgique pour notre R&D, nos investissements dans la robotique, l'électronique avancée et les partenariats technologiques stratégiques." },
+            { id: 'singapore', name: 'BlackWood Singapore', location: 'Singapour', description: 'Centre névralgique pour le commerce et la finance en Asie du Sud-Est.', iconClass: 'fas fa-ship', imageUrl: 'https://wallpaperaccess.com/full/1722724.jpg', creationDate: '2019', history: "Plateforme financière et commerciale incontournable en Asie du Sud-Est depuis 2019, le bureau de Singapour est clé pour notre expansion sur les marchés émergents, la gestion de fortune et le commerce international." },
+            { id: 'shanghai', name: 'BlackWood China', location: 'Shanghai, Chine', description: 'Développe nos activités sur le plus grand marché émergent du monde.', iconClass: 'fas fa-dragon', imageUrl: 'https://wallpapercat.com/w/full/8/0/3/1425001-3840x2160-desktop-4k-shanghai-skyline-background-image.jpg', creationDate: '2021', history: "Inauguré en 2021, le bureau de Shanghai ancre notre présence sur le marché chinois, se concentrant sur le e-commerce, les technologies de consommation et les investissements dans les infrastructures de nouvelle génération." },
+            { id: 'dubai', name: 'BlackWood UAE', location: 'Dubaï, Émirats Arabes Unis', description: 'Pôle stratégique pour le Moyen-Orient et l\'Afrique, axé sur le luxe et l\'énergie.', iconClass: 'fas fa-gem', imageUrl: 'https://wallpaperaccess.com/full/4318138.jpg', creationDate: '2020', history: "Centre d'opérations pour le Moyen-Orient et l'Afrique depuis 2020, le bureau de Dubaï est spécialisé dans l'immobilier de luxe, l'énergie, et les projets d'infrastructure d'envergure dans cette région clé." },
+            { id: 'evermont', name: 'BlackWood Evermont', location: 'Los Santos, Royaume d\'Upton Evermont', description: 'Nouvelle entité autonome, explorant des opportunités uniques dans un environnement innovant et indépendant.', iconClass: 'fas fa-mountain', imageUrl: 'https://images.unsplash.com/photo-1590862988860-534d77c6f92f?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', creationDate: '2025', history: "Né avec le Royaume d'Upton Evermont en 2025, ce bureau incarne notre agilité et notre vision d'avenir. Il est le fer de lance de BlackWood Royal Motors et explore activement les nouvelles frontières de l'investissement et de l'innovation." }
+        ];
+
+
+        const headerImages = {
+            'home': 'https://images.unsplash.com/photo-1509024644558-2f56ce76c490?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'group': 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'subsidiaries': 'https://images.unsplash.com/photo-1512766411668-e305741fcb8b?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'market-news': 'https://images.unsplash.com/photo-1534469650761-fce6cc26ac0d?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'global-network': 'https://images.unsplash.com/photo-1496564203457-11bb12075d90?q=80&w=3650&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        };
+        const orgChartImageUrl = 'https://i.imgur.com/iCnhfzJ.png';
+
+        const blackwoodHistory = {
+            title: "L'Histoire de BlackWood (2009 – Aujourd'hui)",
+            content: `
+                <p class="mb-6">L'aventure BlackWood débute en 2009, au cœur de Zurich. Née d'une ambition claire et d'une vision stratégique portée par son fondateur, Yves Land, BlackWood a été conçue pour devenir une entreprise solide, cohérente, et capable de s'imposer durablement sur la scène internationale. Les premières années ont été dédiées à la construction progressive d'un groupe axé sur des activités clés : la finance, l'immobilier d'investissement, et le développement sectoriel à l'échelle mondiale. L'objectif était simple : bâtir une structure pragmagique, centrée sur la stabilité, la rentabilité à long terme, et l'efficacité opérationnelle.</p>
+                <h5 class="text-xl font-semibold text-gradient-primary mb-3">✦ 2015 : L'Envol Boursier & L'Ancrage International</h5>
+                <p class="mb-6">L'année 2015 marque une étape décisive. BlackWood fait son entrée officielle en bourse, ouvrant 25% de son capital à des investisseurs institutionnels et privés triés sur le volet. Cette introduction coïncide avec l'acquisition d'un nouveau siège mondial à Zurich : un édifice historique, ancien bastion de la Banque Helvétique, autrefois fleuron du paysage bancaire suisse. Ce lieu, vibrant de stabilité et de prestige financier, devient le cœur battant du groupe.</p>
+                <p class="mb-6">Le capital de BlackWood est alors structuré autour de 1,1 milliard d’actions, dont 75% demeurent la propriété d'Yves Land, assurant une continuité visionnaire. Les années suivantes sont consacrées au renforcement de la présence mondiale. Des sièges opérationnels stratégiques sont établis à Paris, Berlin, Londres, Rome, Ottawa, San Francisco, Sydney, Tokyo et Singapour. Chaque implantation est pensée pour une intégration fine aux tissus économiques régionaux, avec un accent sur les investissements à long terme et une gestion locale des opérations.</p>
+                <h5 class="text-xl font-semibold text-gradient-primary mb-3">✦ Un Colosse Structuré, Diversifié et Mondial</h5>
+                <p class="mb-6">Aujourd'hui, BlackWood déploie son expertise à travers une mosaïque de secteurs complémentaires : des marchés financiers à l'immobilier d'investissement, du transport à l'événementiel, des technologies appliquées aux services de marque et à la distribution spécialisée. Le groupe pilote avec maestria plus de 8 000 milliards de dollars d’actifs sous gestion (AUM) à travers le globe, avec des opérations ancrées sur les cinq continents.</p>
+                <p class="mb-6">Depuis sa genèse, BlackWood cultive une gouvernance claire et centralisée, tout en insufflant à ses filiales une autonomie décisionnelle, finement adaptée aux cadres juridiques locaux. L'ensemble du conglomérat vibre au rythme de standards internes exigeants et d'une identité de marque puissante, cohérente et immédiatement identifiable.</p>
+                <p class="mb-6">L'objectif fondateur demeure, immuable : bâtir un groupe pérenne, agile face aux cycles économiques mondiaux, et créateur de valeur réelle, durable et mesurable. Une philosophie qui se résume en quelques mots :</p>
+                <blockquote class="text-center italic text-2xl font-bold mt-8 mb-6" style="color: var(--icon-color);">
+                    “Bâtir avec vision.<br>Agir avec puissance.<br>Dominer avec intégrité.”
+                </blockquote>
+            `
+        };
+
+
+        // Global DOM elements
+        const appContent = document.getElementById('app-content');
+        const header = document.querySelector('header');
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const mobileMenu = document.querySelector('.navbar-menu-mobile');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const historyModalTemplate = document.getElementById('history-modal-template');
+        const officeDetailModalTemplate = document.getElementById('office-detail-modal-template');
+        const chatbotOpenBtn = document.getElementById('chatbot-open-btn');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotCloseBtn = chatbotContainer ? chatbotContainer.querySelector('.close-btn') : null;
+        const chatInput = document.getElementById('chat-input');
+        const chatSendBtn = document.getElementById('chat-send-btn');
+        const chatMessagesDiv = document.getElementById('chatbot-messages');
+        const chatbotHeader = chatbotContainer ? chatbotContainer.querySelector('.chatbot-header') : null;
+        const chatResetBtn = document.getElementById('chat-reset-btn'); // New reset button
+        const chatReplyContext = document.getElementById('chat-reply-context');
+        const chatReplyText = chatReplyContext ? chatReplyContext.querySelector('.reply-text') : null;
+        const chatClearReplyBtn = chatReplyContext ? chatReplyContext.querySelector('.clear-reply') : null;
+
+        let replyingToMessageId = null;
+
+
+        // --- Theme Management ---
+        function applyTheme(theme, isToggleAction = false) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const iconElementDesktop = themeToggle.querySelector('i');
+            const iconElementMobile = themeToggleMobile.querySelector('i');
+
+            const iconClass = theme === 'dark' ? 'fa-sun' : 'fa-moon';
+            const oldIconClass = theme === 'dark' ? 'fa-moon' : 'fa-sun';
+
+            if (isToggleAction) {
+                iconElementDesktop.classList.add('theme-toggle-icon-animate');
+                iconElementMobile.classList.add('theme-toggle-icon-animate');
+                setTimeout(() => {
+                    iconElementDesktop.classList.remove(oldIconClass);
+                    iconElementDesktop.classList.add(iconClass);
+                    iconElementMobile.classList.remove(oldIconClass);
+                    iconElementMobile.classList.add(iconClass);
+                }, 100); // Halfway through animation to change icon
+                 setTimeout(() => {
+                    iconElementDesktop.classList.remove('theme-toggle-icon-animate');
+                    iconElementMobile.classList.remove('theme-toggle-icon-animate');
+                }, 600);
+            } else {
+                iconElementDesktop.classList.remove(oldIconClass, 'theme-toggle-icon-animate');
+                iconElementDesktop.classList.add(iconClass);
+                iconElementMobile.classList.remove(oldIconClass, 'theme-toggle-icon-animate');
+                iconElementMobile.classList.add(iconClass);
+            }
+
+
+            document.querySelectorAll('.dynamic-logo-img').forEach(img => {
+                const lightSrc = img.getAttribute('data-logo-light');
+                const darkSrc = img.getAttribute('data-logo-dark');
+                const fallbackIconClass = img.getAttribute('data-fallback-icon');
+                const fallbackElement = img.parentElement ? img.parentElement.querySelector('.fallback-icon-element') : null;
+
+                let targetSrc = null;
+                if (theme === 'dark') {
+                    targetSrc = (darkSrc && darkSrc !== 'null' && darkSrc !== 'undefined' && darkSrc.trim() !== '') ? darkSrc : ((lightSrc && lightSrc !== 'null' && lightSrc !== 'undefined' && lightSrc.trim() !== '') ? lightSrc : null);
+                } else {
+                    targetSrc = (lightSrc && lightSrc !== 'null' && lightSrc !== 'undefined' && lightSrc.trim() !== '') ? lightSrc : ((darkSrc && darkSrc !== 'null' && darkSrc !== 'undefined' && darkSrc.trim() !== '') ? darkSrc : null);
+                }
+
+                img.onerror = function() {
+                    this.style.display='none';
+                    if (fallbackElement && fallbackIconClass) {
+                        fallbackElement.classList.remove('hidden');
+                        fallbackElement.style.display='block';
+                    }
+                };
+
+                if (targetSrc) {
+                    img.src = targetSrc;
+                    img.style.display = 'block';
+                    if (fallbackElement) fallbackElement.style.display = 'none';
+                } else if (fallbackIconClass && fallbackElement) {
+                    img.style.display = 'none';
+                    img.removeAttribute('src');
+                    fallbackElement.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                    img.removeAttribute('src');
+                    if (fallbackElement) fallbackElement.style.display = 'none';
+                }
+            });
+
+
+            const homeBgImage = document.getElementById('home-image-background');
+            if (homeBgImage) {
+                if (theme === 'dark') {
+                    homeBgImage.style.filter = 'brightness(0.2) grayscale(100%)';
+                } else {
+                    homeBgImage.style.filter = 'brightness(0.8) grayscale(70%)';
+                }
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme, true); // Pass true to indicate it's a toggle action
+        }
+
+        // Initial theme detection (Always dark by default as per new request)
+        applyTheme('dark', false);
+
+
+        // --- Routing and Page Rendering ---
+        const routes = {
+            '': 'home',
+            'home': 'home',
+            'group': 'group',
+            'subsidiaries': 'subsidiaries',
+            'market-news': 'market-news',
+            'global-network': 'global-network'
+        };
+
+        function navigate(path) {
+            window.location.hash = path;
+            window.scrollTo(0, 0);
+        }
+
+        function closeMobileMenu() {
+            if (mobileMenu.classList.contains('active')) {
+                mobileMenu.classList.remove('active');
+                mobileMenu.classList.add('hidden');
+                hamburgerMenu.querySelector('i').classList.remove('fa-times');
+                hamburgerMenu.querySelector('i').classList.add('fa-bars');
+            }
+        }
+
+
+        let stockUpdateIntervalBLWD = null;
+        let bciAssetsUpdateInterval = null;
+        let majorInvestmentsUpdateInterval = null;
+
+        let currentStockPriceBLWD = 275.45;
+        let stockHistoryBLWD = [];
+        let blwdChartElements = {};
+
+
+        function generateFictionalStockDataBLWD() {
+            const volatility = 0.0001;
+            const trend = 0.000005;
+            let change = (Math.random() * volatility * 2 - volatility) + trend;
+            let newPrice = currentStockPriceBLWD * (1 + change);
+            newPrice = Math.max(272, Math.min(278, newPrice));
+
+            currentStockPriceBLWD = newPrice;
+            const now = new Date();
+            return {
+                price: newPrice,
+                change: (newPrice - (stockHistoryBLWD.length > 0 ? stockHistoryBLWD[stockHistoryBLWD.length - 1].price : newPrice)).toFixed(2),
+                percentageChange: ((newPrice - (stockHistoryBLWD.length > 0 ? stockHistoryBLWD[stockHistoryBLWD.length - 1].price : newPrice)) / (stockHistoryBLWD.length > 0 ? stockHistoryBLWD[stockHistoryBLWD.length - 1].price : newPrice) * 100).toFixed(2),
+                marketCap: (newPrice * 1.1 * 1000000000),
+                volume: Math.floor(Math.random() * 1200000 + 400000),
+                lastUpdated: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                timestamp: now
+            };
+        }
+
+
+        function prePopulateBLWDHistory() {
+            stockHistoryBLWD = [];
+            let tempPrice = 274 + Math.random() * 2;
+            const now = new Date();
+            const intervalMs = 10000;
+            const totalPoints = 60;
+
+            for (let i = totalPoints - 1; i >= 0; i--) {
+                const timestamp = new Date(now.getTime() - (i * intervalMs));
+                const volatility = 0.00005;
+                const trend = 0.000001;
+                let change = (Math.random() * volatility * 2 - volatility) + trend;
+                tempPrice *= (1 + change);
+                tempPrice = Math.max(272, Math.min(278, tempPrice));
+                stockHistoryBLWD.push({ timestamp: timestamp, price: tempPrice });
+            }
+            currentStockPriceBLWD = stockHistoryBLWD[stockHistoryBLWD.length - 1].price;
+        }
+
+
+        function initializeChartBLWD(isInitialCall = false) {
+            const chartContainer = document.getElementById('blwd-stock-chart-container');
+            if (!chartContainer) return;
+
+            d3.select(chartContainer).select("svg").remove();
+
+            const margin = { top: 25, right: 45, bottom: 40, left: 65 };
+            const width = chartContainer.offsetWidth - margin.left - margin.right;
+            const height = chartContainer.offsetHeight - margin.top - margin.bottom;
+
+            blwdChartElements.svg = d3.select(chartContainer).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const defs = blwdChartElements.svg.append("defs");
+            const gradient = defs.append("linearGradient")
+                .attr("id", "line-gradient-blwd")
+                .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%");
+            gradient.append("stop").attr("offset", "0%").style("stop-color", "var(--chart-line-color-start)").style("stop-opacity", 0.7);
+            gradient.append("stop").attr("offset", "100%").style("stop-color", "var(--chart-line-color-end)").style("stop-opacity", 0.7);
+
+            const areaGradient = defs.append("linearGradient")
+                .attr("id", "area-gradient-blwd")
+                .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%");
+            areaGradient.append("stop").attr("offset", "0%").style("stop-color", "var(--chart-line-color-start)").style("stop-opacity", 0.2);
+            areaGradient.append("stop").attr("offset", "100%").style("stop-color", "var(--chart-line-color-end)").style("stop-opacity", 0.01);
+
+
+            blwdChartElements.xScale = d3.scaleTime().range([0, width]);
+            blwdChartElements.yScale = d3.scaleLinear().range([height, 0]);
+
+            blwdChartElements.line = d3.line()
+                .x(d => blwdChartElements.xScale(d.timestamp))
+                .y(d => blwdChartElements.yScale(d.price))
+                .curve(d3.curveMonotoneX);
+
+            blwdChartElements.area = d3.area()
+                .x(d => blwdChartElements.xScale(d.timestamp))
+                .y0(height)
+                .y1(d => blwdChartElements.yScale(d.price))
+                .curve(d3.curveMonotoneX);
+
+            blwdChartElements.xAxis = blwdChartElements.svg.append("g").attr("class", "axis x-axis").attr("transform", `translate(0,${height})`);
+            blwdChartElements.yAxis = blwdChartElements.svg.append("g").attr("class", "axis y-axis");
+
+            blwdChartElements.areaPath = blwdChartElements.svg.append("path").attr("class", "area").style("fill", "url(#area-gradient-blwd)");
+            blwdChartElements.linePath = blwdChartElements.svg.append("path").attr("class", "line");
+
+
+            blwdChartElements.gridX = blwdChartElements.svg.append("g").attr("class", "grid x-grid").attr("transform", `translate(0,${height})`).style("stroke-dasharray", ("2,2"));
+            blwdChartElements.gridY = blwdChartElements.svg.append("g").attr("class", "grid y-grid").style("stroke-dasharray", ("2,2"));
+
+            blwdChartElements.focus = blwdChartElements.svg.append("g")
+                .attr("class", "tooltip-group")
+                .style("display", "none");
+
+            blwdChartElements.focus.append("line")
+                .attr("class", "tooltip-line x")
+                .attr("y1", 0)
+                .attr("y2", height);
+
+            blwdChartElements.focus.append("circle")
+                .attr("class", "tooltip-circle")
+                .attr("r", 5);
+
+            blwdChartElements.tooltipRect = blwdChartElements.focus.append("rect")
+                .attr("class", "tooltip-rect")
+                .attr("width", 0)
+                .attr("height", 0)
+                .attr("x", 0)
+                .attr("y", 0);
+
+            blwdChartElements.tooltipText = blwdChartElements.focus.append("text")
+                .attr("class", "tooltip-text")
+                .attr("x", 0)
+                .attr("y", 0);
+
+            blwdChartElements.overlay = blwdChartElements.svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .on("mouseover", () => blwdChartElements.focus.style("display", null).classed("active", true))
+                .on("mouseout", () => blwdChartElements.focus.style("display", "none").classed("active", false))
+                .on("mousemove", mousemoveBLWD);
+
+            if (isInitialCall) {
+                updateChartBLWD(true);
+            }
+        }
+
+        function updateChartBLWD(noTransition = false) {
+            if (!blwdChartElements.svg || stockHistoryBLWD.length === 0) return;
+
+            blwdChartElements.xScale.domain(d3.extent(stockHistoryBLWD, d => d.timestamp));
+            const extentY = d3.extent(stockHistoryBLWD, d => d.price);
+            const paddingY = Math.max(0.1, (extentY[1] - extentY[0]) * 0.15);
+            blwdChartElements.yScale.domain([Math.max(0, extentY[0] - paddingY), extentY[1] + paddingY]);
+
+            const duration = noTransition ? 0 : 300;
+
+            blwdChartElements.xAxis.transition().duration(duration).call(d3.axisBottom(blwdChartElements.xScale).ticks(Math.max(2, Math.floor(blwdChartElements.svg.select("g").node().getBBox().width / 80))).tickFormat(d3.timeFormat("%H:%M:%S")));
+            blwdChartElements.yAxis.transition().duration(duration).call(d3.axisLeft(blwdChartElements.yScale).ticks(5).tickFormat(d => `$${d.toFixed(2)}`));
+
+            blwdChartElements.areaPath.datum(stockHistoryBLWD).transition().duration(duration).attr("d", blwdChartElements.area);
+            blwdChartElements.linePath.datum(stockHistoryBLWD).transition().duration(duration).attr("d", blwdChartElements.line);
+
+
+            blwdChartElements.gridX.call(d3.axisBottom(blwdChartElements.xScale).tickSize(-blwdChartElements.svg.select("g").node().getBBox().height).tickFormat("").ticks(Math.max(2, Math.floor(blwdChartElements.svg.select("g").node().getBBox().width / 80))));
+            blwdChartElements.gridY.call(d3.axisLeft(blwdChartElements.yScale).tickSize(-blwdChartElements.svg.select("g").node().getBBox().width).tickFormat("").ticks(5));
+        }
+
+        function mousemoveBLWD(event) {
+            const bisectDate = d3.bisector(d => d.timestamp).left;
+            const x0 = blwdChartElements.xScale.invert(d3.pointer(event)[0]);
+            const i = bisectDate(stockHistoryBLWD, x0, 1);
+            const d0 = stockHistoryBLWD[i - 1];
+            const d1 = stockHistoryBLWD[i];
+            const d = (d0 && d1) ? (x0 - d0.timestamp > d1.timestamp - x0 ? d1 : d0) : (d0 || d1);
+            if (!d) return;
+
+
+            const xPos = blwdChartElements.xScale(d.timestamp);
+            const yPos = blwdChartElements.yScale(d.price);
+
+            blwdChartElements.focus.attr("transform", `translate(${xPos},${yPos})`);
+            blwdChartElements.focus.select(".tooltip-circle").attr("r", 5);
+            blwdChartElements.focus.select(".tooltip-line.x").attr("transform", `translate(0,${yPos * -1})`);
+
+            const textContent = `$${d.price.toFixed(2)}`;
+            blwdChartElements.tooltipText.text(textContent);
+
+            const textBBox = blwdChartElements.tooltipText.node().getBBox();
+            const padding = 8;
+            const rectWidth = textBBox.width + padding * 2;
+            const rectHeight = textBBox.height + padding * 2;
+
+            blwdChartElements.tooltipRect
+                .attr("x", textBBox.x - padding)
+                .attr("y", textBBox.y - padding)
+                .attr("width", rectWidth)
+                .attr("height", rectHeight);
+
+            blwdChartElements.tooltipText
+                .attr("x", 0)
+                .attr("y", -15);
+        }
+
+        function updateStockDisplayBLWD() {
+            const data = generateFictionalStockDataBLWD();
+            stockHistoryBLWD.push({ timestamp: data.timestamp, price: data.price });
+            if (stockHistoryBLWD.length > 60) stockHistoryBLWD.shift();
+
+            const elements = {
+                price: document.getElementById('blwd-current-price'),
+                change: document.getElementById('blwd-daily-change'),
+                marketCap: document.getElementById('blwd-market-cap'),
+                lastUpdated: document.getElementById('blwd-last-updated'),
+                volume: document.getElementById('blwd-trade-volume')
+            };
+
+            if (elements.price) elements.price.textContent = `$${data.price.toFixed(2)} USD`;
+            if (elements.marketCap) elements.marketCap.textContent = `$${(data.marketCap / 1000000000).toFixed(2)} Mrd USD`;
+            if (elements.lastUpdated) elements.lastUpdated.textContent = data.lastUpdated;
+            if (elements.volume) elements.volume.textContent = data.volume.toLocaleString('fr-FR');
+
+            if (elements.change) {
+                const prevPrice = stockHistoryBLWD.length > 1 ? stockHistoryBLWD[stockHistoryBLWD.length - 2].price : data.price;
+                const dailyChangeValue = (data.price - prevPrice).toFixed(2);
+                const percentageChangeValue = ((data.price - prevPrice) / prevPrice * 100).toFixed(2);
+
+                elements.change.textContent = `${dailyChangeValue >= 0 ? '+' : ''}$${dailyChangeValue} (${percentageChangeValue >= 0 ? '+' : ''}${percentageChangeValue}%)`;
+                elements.change.classList.remove('positive', 'negative');
+                if (parseFloat(dailyChangeValue) > 0) elements.change.classList.add('positive');
+                else if (parseFloat(dailyChangeValue) < 0) elements.change.classList.add('negative');
+            }
+            updateChartBLWD();
+        }
+
+        function generateFictionalBCIAssetsData() {
+            const volatility = 0.0001;
+            const trend = 0.000005;
+            let change = (Math.random() * volatility * 2 - volatility) + trend;
+            let newAssets = currentBCIAssets * (1 + change);
+            newAssets = Math.max(8120, Math.min(8180, newAssets));
+
+            currentBCIAssets = newAssets;
+            const now = new Date();
+            return {
+                value: newAssets,
+                change: (newAssets - (bciAssetsHistory.length > 0 ? bciAssetsHistory[bciAssetsHistory.length - 1].value : newAssets)).toFixed(2),
+                percentageChange: ((newAssets - (bciAssetsHistory.length > 0 ? bciAssetsHistory[bciAssetsHistory.length - 1].value : newAssets)) / (bciAssetsHistory.length > 0 ? bciAssetsHistory[bciAssetsHistory.length - 1].value : newAssets) * 100).toFixed(2),
+                lastUpdated: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                timestamp: now
+            };
+        }
+
+        function prePopulateBCIHistory() {
+            bciAssetsHistory = [];
+            let tempAssets = 8140 + Math.random() * 20;
+            const now = new Date();
+            const intervalMs = 10000;
+            const totalPoints = 60;
+
+            for (let i = totalPoints - 1; i >= 0; i--) {
+                const timestamp = new Date(now.getTime() - (i * intervalMs));
+                const volatility = 0.00005;
+                const trend = 0.000001;
+                let change = (Math.random() * volatility * 2 - volatility) + trend;
+                tempAssets *= (1 + change);
+                tempAssets = Math.max(8120, Math.min(8180, tempAssets));
+                bciAssetsHistory.push({ timestamp: timestamp, value: tempAssets });
+            }
+            currentBCIAssets = bciAssetsHistory[bciAssetsHistory.length - 1].value;
+        }
+
+        function initializeBCIChart(isInitialCall = false) {
+            const chartContainer = document.getElementById('bci-assets-chart-container');
+            if (!chartContainer) return;
+
+            d3.select(chartContainer).select("svg").remove();
+
+            const margin = { top: 25, right: 45, bottom: 40, left: 75 };
+            const width = chartContainer.offsetWidth - margin.left - margin.right;
+            const height = chartContainer.offsetHeight - margin.top - margin.bottom;
+
+            bciChartElements.svg = d3.select(chartContainer).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const defs = bciChartElements.svg.append("defs");
+            const gradient = defs.append("linearGradient")
+                .attr("id", "line-gradient-bci")
+                .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%");
+            gradient.append("stop").attr("offset", "0%").style("stop-color", "var(--secondary-accent-color)").style("stop-opacity", 0.7);
+            gradient.append("stop").attr("offset", "100%").style("stop-color", "var(--icon-color)").style("stop-opacity", 0.7);
+
+            const areaGradient = defs.append("linearGradient")
+                .attr("id", "area-gradient-bci")
+                .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%");
+            areaGradient.append("stop").attr("offset", "0%").style("stop-color", "var(--secondary-accent-color)").style("stop-opacity", 0.2);
+            areaGradient.append("stop").attr("offset", "100%").style("stop-color", "var(--icon-color)").style("stop-opacity", 0.01);
+
+
+            bciChartElements.xScale = d3.scaleTime().range([0, width]);
+            bciChartElements.yScale = d3.scaleLinear().range([height, 0]);
+
+            bciChartElements.line = d3.line()
+                .x(d => bciChartElements.xScale(d.timestamp))
+                .y(d => bciChartElements.yScale(d.value))
+                .curve(d3.curveMonotoneX);
+
+            bciChartElements.area = d3.area()
+                .x(d => bciChartElements.xScale(d.timestamp))
+                .y0(height)
+                .y1(d => bciChartElements.yScale(d.value))
+                .curve(d3.curveMonotoneX);
+
+            bciChartElements.xAxis = bciChartElements.svg.append("g").attr("class", "axis x-axis").attr("transform", `translate(0,${height})`);
+            bciChartElements.yAxis = bciChartElements.svg.append("g").attr("class", "axis y-axis");
+
+            bciChartElements.areaPath = bciChartElements.svg.append("path").attr("class", "area").style("fill", "url(#area-gradient-bci)");
+            bciChartElements.linePath = bciChartElements.svg.append("path").attr("class", "line-bci").style("stroke", "url(#line-gradient-bci)");
+
+
+            bciChartElements.gridX = bciChartElements.svg.append("g").attr("class", "grid x-grid").attr("transform", `translate(0,${height})`).style("stroke-dasharray", ("2,2"));
+            bciChartElements.gridY = bciChartElements.svg.append("g").attr("class", "grid y-grid").style("stroke-dasharray", ("2,2"));
+
+            bciChartElements.focus = bciChartElements.svg.append("g")
+                .attr("class", "tooltip-group")
+                .style("display", "none");
+
+            bciChartElements.focus.append("line")
+                .attr("class", "tooltip-line x")
+                .attr("y1", 0)
+                .attr("y2", height);
+
+            bciChartElements.focus.append("circle")
+                .attr("class", "tooltip-circle")
+                .attr("r", 5);
+
+            bciChartElements.tooltipRect = bciChartElements.focus.append("rect")
+                .attr("class", "tooltip-rect")
+                .attr("width", 0)
+                .attr("height", 0)
+                .attr("x", 0)
+                .attr("y", 0);
+
+            bciChartElements.tooltipText = bciChartElements.focus.append("text")
+                .attr("class", "tooltip-text")
+                .attr("x", 0)
+                .attr("y", 0);
+
+            bciChartElements.overlay = bciChartElements.svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .on("mouseover", () => bciChartElements.focus.style("display", null).classed("active", true))
+                .on("mouseout", () => bciChartElements.focus.style("display", "none").classed("active", false))
+                .on("mousemove", mousemoveBCI);
+
+            if (isInitialCall) {
+                updateBCIChart(true);
+            }
+        }
+
+        function updateBCIChart(noTransition = false) {
+            if (!bciChartElements.svg || bciAssetsHistory.length === 0) return;
+
+            bciChartElements.xScale.domain(d3.extent(bciAssetsHistory, d => d.timestamp));
+            const extentY = d3.extent(bciAssetsHistory, d => d.value);
+            const paddingY = Math.max(10, (extentY[1] - extentY[0]) * 0.15);
+            bciChartElements.yScale.domain([Math.max(0, extentY[0] - paddingY), extentY[1] + paddingY]);
+
+            const duration = noTransition ? 0 : 300;
+
+            bciChartElements.xAxis.transition().duration(duration).call(d3.axisBottom(bciChartElements.xScale).ticks(Math.max(2, Math.floor(bciChartElements.svg.select("g").node().getBBox().width / 80))).tickFormat(d3.timeFormat("%H:%M:%S")));
+            bciChartElements.yAxis.transition().duration(duration).call(d3.axisLeft(bciChartElements.yScale).ticks(5).tickFormat(d => `$${(d / 1000).toFixed(3)} Bn`));
+
+            bciChartElements.areaPath.datum(bciAssetsHistory).transition().duration(duration).attr("d", bciChartElements.area);
+            bciChartElements.linePath.datum(bciAssetsHistory).transition().duration(duration).attr("d", bciChartElements.line);
+
+
+            bciChartElements.gridX.call(d3.axisBottom(bciChartElements.xScale).tickSize(-bciChartElements.svg.select("g").node().getBBox().height).tickFormat("").ticks(Math.max(2, Math.floor(bciChartElements.svg.select("g").node().getBBox().width / 80))));
+            bciChartElements.gridY.call(d3.axisLeft(bciChartElements.yScale).tickSize(-bciChartElements.svg.select("g").node().getBBox().width).tickFormat("").ticks(5));
+        }
+
+        function mousemoveBCI(event) {
+            const bisectDate = d3.bisector(d => d.timestamp).left;
+            const x0 = bciChartElements.xScale.invert(d3.pointer(event)[0]);
+            const i = bisectDate(bciAssetsHistory, x0, 1);
+            const d0 = bciAssetsHistory[i - 1];
+            const d1 = bciAssetsHistory[i];
+            const d = (d0 && d1) ? (x0 - d0.timestamp > d1.timestamp - x0 ? d1 : d0) : (d0 || d1);
+            if (!d) return;
+
+            const xPos = bciChartElements.xScale(d.timestamp);
+            const yPos = bciChartElements.yScale(d.value);
+
+            bciChartElements.focus.attr("transform", `translate(${xPos},${yPos})`);
+            bciChartElements.focus.select(".tooltip-circle").attr("r", 5);
+            bciChartElements.focus.select(".tooltip-line.x").attr("transform", `translate(0,${yPos * -1})`);
+
+            const textContent = `$${(d.value / 1000).toFixed(3)} Bn`;
+            bciChartElements.tooltipText.text(textContent);
+
+            const textBBox = bciChartElements.tooltipText.node().getBBox();
+            const padding = 8;
+            const rectWidth = textBBox.width + padding * 2;
+            const rectHeight = textBBox.height + padding * 2;
+
+            bciChartElements.tooltipRect
+                .attr("x", textBBox.x - padding)
+                .attr("y", textBBox.y - padding)
+                .attr("width", rectWidth)
+                .attr("height", rectHeight);
+
+            bciChartElements.tooltipText
+                .attr("x", 0)
+                .attr("y", -15);
+        }
+
+        function updateBCIAssetsDisplay() {
+            const data = generateFictionalBCIAssetsData();
+            bciAssetsHistory.push({ timestamp: data.timestamp, value: data.value });
+            if (bciAssetsHistory.length > 60) bciAssetsHistory.shift();
+
+            const elements = {
+                value: document.getElementById('bci-total-assets'),
+                change: document.getElementById('bci-daily-change'),
+                lastUpdated: document.getElementById('bci-last-updated')
+            };
+
+            if (elements.value) elements.value.textContent = `$${data.value.toFixed(2)} Milliards USD`;
+            if (elements.change) {
+                const prevValue = bciAssetsHistory.length > 1 ? bciAssetsHistory[bciAssetsHistory.length - 2].value : data.value;
+                const percentageChangeValue = ((data.value - prevValue) / prevValue * 100).toFixed(2);
+
+                elements.change.textContent = `${percentageChangeValue >= 0 ? '+' : ''}${percentageChangeValue}%`;
+                elements.change.classList.remove('positive', 'negative');
+                if (parseFloat(percentageChangeValue) > 0) elements.change.classList.add('positive');
+                else if (parseFloat(percentageChangeValue) < 0) elements.change.classList.add('negative');
+            }
+            if (elements.lastUpdated) elements.lastUpdated.textContent = data.lastUpdated;
+
+            updateBCIChart();
+        }
+
+        function updateMajorInvestmentsDisplay() {
+            majorInvestmentsData.forEach((investment, index) => {
+                const volatility = 0.0008;
+                const change = (Math.random() * volatility * 2 - volatility);
+                investment.fictionalSharePrice *= (1 + change);
+                investment.fictionalSharePrice = Math.max(50, Math.min(2000, investment.fictionalSharePrice));
+                const ownedShares = (investment.ownershipPercentage / 100) * investment.totalCompanyShares;
+                const currentValue = investment.fictionalSharePrice * ownedShares;
+                const valueElement = document.getElementById(`investment-value-${index}`);
+                if (valueElement) {
+                    let formattedValue;
+                    if (currentValue >= 1000000000000) { formattedValue = `$${(currentValue / 1000000000000).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Trillions USD`; }
+                    else if (currentValue >= 1000000000) { formattedValue = `$${(currentValue / 1000000000).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mrd USD`; }
+                    else { formattedValue = `$${currentValue.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`; }
+                    valueElement.textContent = `Valeur: ${formattedValue}`;
+                }
+            });
+        }
+
+        function renderPage(path) {
+            const pageType = routes[path] || 'home';
+            document.querySelectorAll('.navbar-link').forEach(link => link.classList.remove('active-page'));
+            document.querySelectorAll('.dropdown-menu a').forEach(link => link.classList.remove('active-page'));
+            const mainNavLinkId = path.includes('/') ? path.split('/')[0] : path;
+            const activeNavLink = document.getElementById(`nav-link-${mainNavLinkId}`) || document.getElementById(`nav-link-${path}`);
+            if (activeNavLink) activeNavLink.classList.add('active-page');
+            if (path === 'subsidiaries' || path === 'market-news' || path === 'global-network') {
+                 document.getElementById('nav-link-group')?.classList.add('active-page');
+                 document.querySelector(`.dropdown-menu a[data-category="${path}"]`)?.classList.add('active-page');
+            } else if (path === 'group') {
+                 document.getElementById('nav-link-group')?.classList.add('active-page');
+            }
+
+
+            if (stockUpdateIntervalBLWD) { clearInterval(stockUpdateIntervalBLWD); stockUpdateIntervalBLWD = null; }
+            if (bciAssetsUpdateInterval) { clearInterval(bciAssetsUpdateInterval); bciAssetsUpdateInterval = null; }
+            if (majorInvestmentsUpdateInterval) { clearInterval(majorInvestmentsUpdateInterval); majorInvestmentsUpdateInterval = null; }
+
+
+            appContent.classList.remove('page-transition-enter-active');
+            appContent.classList.add('page-transition-exit-active');
+
+            setTimeout(() => {
+                let contentHTML = '';
+                if (pageType === 'home') {
+                    contentHTML = `
+                        <section id="hero" class="hero-section">
+                            <div id="home-image-background" style="background-image: url('${headerImages.home}');"></div> <canvas id="particle-canvas"></canvas>
+                            <div class="hero-content animate-on-scroll animate-delay-200">
+                                <div class="glass-container">
+                                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-gradient-primary">BlackWood</h1>
+                                    <p class="text-xl md:text-2xl font-light mb-10 max-w-3xl mx-auto">Façonner l'avenir de l'économie mondiale avec excellence et innovation.</p>
+                                    <button class="hero-btn text-lg" onclick="navigate('group')">Découvrir le Groupe</button>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="about-us-section" class="content-section flex justify-center items-center">
+                            <div class="container mx-auto px-4 animate-on-scroll about-us-glass-container">
+                                <h2 class="text-4xl md:text-5xl font-bold mb-8" style="color: var(--text-color-primary);">Qui sommes-nous ?</h2>
+                                <p class="text-lg md:text-xl max-w-4xl mx-auto leading-relaxed mb-8" style="color: var(--text-color-secondary);">
+                                    BlackWood est un conglomérat international de premier plan, fondé en 2009 par Yves Land.
+                                    Avec une valorisation de plusieurs centaines de milliards de dollars et la gestion de plusieurs
+                                    trillions de dollars d'actifs à travers le monde, nous sommes un acteur incontournable de
+                                    l'économie mondiale.
+                                </p>
+                                <p class="text-lg md:text-xl max-w-4xl mx-auto leading-relaxed" style="color: var(--text-color-secondary);">
+                                    Notre présence s'étend sur des secteurs clés tels que la finance, l'automobile, l'événementiel,
+                                    le design et bien d'autres. Grâce à une vision stratégique audacieuse et une innovation
+                                    constante, BlackWood s'engage à fournir des solutions sur-mesure
+                                    qui allient performance, sophistication et une attention inégalée aux détails, pour les entreprises et les particuliers.
+                                </p>
+                            </div>
+                        </section>`;
+                } else if (pageType === 'group') {
+                    contentHTML = `
+                        <div class="header-hero animate-on-scroll" style="background-image: url('${headerImages.group}');">
+                            <div class="header-hero-title-overlay">
+                                <h2 class="text-gradient-primary">Le Groupe BlackWood</h2>
+                            </div>
+                        </div>
+                        <section id="group-section" class="content-section !pt-0">
+                            <div class="container mx-auto px-4">
+                                <div class="grid md:grid-cols-2 gap-10 md:gap-12 items-center mb-12 md:mb-16">
+                                    <div class="animate-on-scroll animate-delay-100">
+                                        <img src="https://i.imgur.com/LXR3bPh.jpeg" alt="Image du siège social de BlackWood à Zurich" class="rounded-2xl shadow-2xl w-full h-auto object-cover">
+                                        <p class="text-center text-sm mt-3 font-medium" style="color: var(--text-color-secondary);">Siège Social de BlackWood : Zurich, Suisse</p>
+                                    </div>
+                                    <div class="animate-on-scroll animate-delay-200">
+                                        <h3 class="text-2xl md:text-3xl font-semibold mb-4" style="color: var(--text-color-primary);">Fondation et Mission</h3>
+                                        <p class="text-md md:text-lg leading-relaxed mb-4 md:mb-6" style="color: var(--text-color-secondary);">Fondé en 2009 par Yves Land, BlackWood est un conglomérat international de premier plan, valorisé à plusieurs centaines de milliards de dollars. Nous opérons dans divers secteurs stratégiques, gérant des actifs considérables à l'échelle mondiale. Notre succès repose sur une vision claire, une innovation continue et un engagement indéfectible envers l'excellence.</p>
+                                        <p class="text-md md:text-lg leading-relaxed" style="color: var(--text-color-secondary);">Notre mission est d'accompagner les entreprises et les particuliers en leur fournissant des solutions sur-mesure qui allient performance et sophistication, façonnant ainsi l'avenir de l'économie globale. Notre siège est fièrement établi à Zurich, en Suisse.</p>
+                                        <div class="flex justify-center mt-8 animate-on-scroll animate-delay-300">
+                                            <button class="normal-button" onclick="openHistoryModal()">Découvrir notre Histoire</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="separator-bar animate-on-scroll"></div>
+                                <h3 class="text-3xl md:text-4xl font-bold text-center my-10 md:my-12 animate-on-scroll" style="color: var(--text-color-primary);">Organigramme du Groupe</h3>
+                                <div class="org-chart-container animate-on-scroll animate-delay-300 mb-12 md:mb-16">
+                                    <img src="${orgChartImageUrl}" alt="Organigramme du Groupe BlackWood">
+                                    <p class="text-center text-sm mt-3 font-medium" style="color: var(--text-color-secondary);">Organigramme Simplifié du Groupe BlackWood</p>
+                                </div>
+
+                                <div class="separator-bar animate-on-scroll"></div>
+                                <h3 class="text-3xl md:text-4xl font-bold text-center my-10 md:my-12 animate-on-scroll" style="color: var(--text-color-primary);">Nos Pôles d'Activité Stratégiques</h3>
+                                <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 mt-8">
+                                    ${groupPolesData.map((pole, index) => `
+                                        <div class="info-card animate-on-scroll animate-delay-${(index + 4) * 100}">
+                                            <div class="info-logo-container">
+                                                <img src="" data-logo-light="${pole.logoLightUrl}" data-logo-dark="${pole.logoDarkUrl}" data-fallback-icon="${pole.fallbackIconClass}" alt="${pole.name} Logo" class="dynamic-logo-img" style="display: none;">
+                                                <i class="${pole.fallbackIconClass} text-gradient-primary fallback-icon-element" style="display: block;"></i>
+                                            </div>
+                                            <div class="p-6 md:p-8 flex-grow flex flex-col justify-between text-center">
+                                                <div>
+                                                    <h4 class="text-xl md:text-2xl font-semibold mb-3" style="color: var(--text-color-primary);">${pole.name}</h4>
+                                                    <p class="text-sm md:text-md leading-relaxed" style="color: var(--text-color-secondary);">${pole.description}</p>
+                                                </div>
+                                                <button class="modal-open-btn mt-6 text-sm py-2.5 px-6" onclick="navigate('${pole.actionLink}')">Découvrir nos performances</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </section>`;
+                } else if (pageType === 'market-news') {
+                     contentHTML = `
+                        <div class="header-hero animate-on-scroll" style="background-image: url('${headerImages['market-news']}');">
+                            <div class="header-hero-title-overlay">
+                                <h2 class="text-gradient-primary">Actualités Boursières</h2>
+                            </div>
+                        </div>
+                        <section id="market-news-section" class="content-section !pt-0">
+                            <div class="container mx-auto px-4">
+                                <p class="text-lg md:text-xl max-w-4xl mx-auto leading-relaxed text-center mb-12 animate-on-scroll" style="color: var(--text-color-secondary);">Suivez la performance de BlackWood (BLWD) et les événements clés qui façonnent notre valorisation sur les marchés mondiaux.</p>
+                                <div class="stock-info-container animate-on-scroll mb-12">
+                                    <h3 class="text-2xl md:text-3xl font-bold mb-4 text-center" style="color: var(--text-color-primary);">BlackWood (BLWD)</h3>
+                                    <div class="flex flex-col md:flex-row justify-around items-center gap-4 mb-6 text-center">
+                                        <div><p class="text-md md:text-lg font-medium" style="color: var(--text-color-secondary);">Cours Actuel :</p><p id="blwd-current-price" class="text-3xl md:text-4xl font-bold text-gradient-primary">Chargement...</p></div>
+                                        <div><p class="text-sm md:text-md" style="color: var(--text-color-secondary);">Variation Jour :</p><p id="blwd-daily-change" class="text-lg md:text-xl font-semibold">Chargement...</p></div>
+                                        <div><p class="text-sm md:text-md" style="color: var(--text-color-secondary);">Capitalisation :</p><p id="blwd-market-cap" class="text-lg md:text-xl font-semibold">Chargement...</p></div>
+                                        <div><p class="text-sm md:text-md" style="color: var(--text-color-secondary);">Volume :</p><p id="blwd-trade-volume" class="text-lg md:text-xl font-semibold">Chargement...</p></div>
+                                    </div>
+                                    <div id="blwd-stock-chart-container" class="stock-chart-container"></div>
+                                    <p class="text-xs text-center mt-2" style="color: var(--text-color-secondary);">Dernière mise à jour : <span id="blwd-last-updated">Chargement...</span> (Données de BlackWood à l'international)</p>
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold text-center my-12 animate-on-scroll" style="color: var(--text-color-primary);">Dernières Nouvelles du Groupe</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-16">
+                                    <div class="news-card animate-on-scroll animate-delay-100"><h4 class="text-lg md:text-xl font-semibold mb-2 news-title text-gradient-primary">Janvier 2025 : BlackWood Capital lance un fonds d'investissement axé sur l'IA.</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">20 Janvier 2025</p><p class="text-sm leading-relaxed mb-3" style="color: var(--text-color-secondary);">BlackWood Capital a annoncé le lancement d'un nouveau fonds dédié aux technologies d'intelligence artificielle, visant à investir dans des startups prometteuses et des entreprises établies.</p><p class="text-md font-semibold stock-change positive">Impact BLWD : +1.8% <i class="fas fa-arrow-trend-up"></i></p></div>
+                                    <div class="news-card animate-on-scroll animate-delay-200"><h4 class="text-lg md:text-xl font-semibold mb-2 news-title text-gradient-primary">Février 2025 : BlackWood Royal Motors signe un partenariat stratégique avec un fabricant de batteries innovant.</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">10 Février 2025</p><p class="text-sm leading-relaxed mb-3" style="color: var(--text-color-secondary);">Pour renforcer sa position sur le marché des véhicules électriques, BlackWood Royal Motors a conclu un accord exclusif avec une entreprise pionnière dans les batteries à l'état solide.</p><p class="text-md font-semibold stock-change positive">Impact BLWD : +2.5% <i class="fas fa-arrow-trend-up"></i></p></div>
+                                    <div class="news-card animate-on-scroll animate-delay-300"><h4 class="text-lg md:text-xl font-semibold mb-2 news-title text-gradient-primary">Mars 2025 : BlackWood Global Services étend ses opérations en Asie du Sud-Est.</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">05 Mars 2025</p><p class="text-sm leading-relaxed mb-3" style="color: var(--text-color-secondary);">Avec l'ouverture de nouveaux bureaux à Singapour et Kuala Lumpur, BlackWood Global Services renforce sa présence dans la région Asie-Pacifique, offrant une gamme élargie de services.</p><p class="text-md font-semibold stock-change positive">Impact BLWD : +1.2% <i class="fas fa-arrow-trend-up"></i></p></div>
+                                    <div class="news-card animate-on-scroll animate-delay-400"><h4 class="text-lg md:text-xl font-semibold mb-2 news-title text-gradient-primary">Avril 2025 : BlackWood Photography remporte un prix international pour sa campagne "Visions du Futur".</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">22 Avril 2025</p><p class="text-sm leading-relaxed mb-3" style="color: var(--text-color-secondary);">La campagne innovante de BlackWood Photography a été saluée par la critique et a reçu le prestigieux "Golden Lens Award" pour son approche artistique et sa vision avant-gardiste.</p><p class="text-md font-semibold stock-change positive">Impact BLWD : +0.9% <i class="fas fa-arrow-trend-up"></i></p></div>
+                                    <div class="news-card animate-on-scroll animate-delay-500 md:col-span-2"><h4 class="text-lg md:text-xl font-semibold mb-2 news-title text-gradient-primary">Mai 2025 : Le rapport trimestriel de BlackWood révèle une croissance robuste et des perspectives solides.</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">15 Mai 2025</p><p class="text-sm leading-relaxed mb-3" style="color: var(--text-color-secondary);">BlackWood a annoncé des résultats financiers supérieurs aux attentes pour le premier trimestre 2025, avec une croissance significative dans tous les secteurs d'activité, malgré les incertitudes économiques mondiales.</p><p class="text-md font-semibold stock-change positive">Impact BLWD : +3.1% <i class="fas fa-arrow-trend-up"></i></p></div>
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold text-center my-12 animate-on-scroll" style="color: var(--text-color-primary);">BlackWood Capital Investments (BCI)</h3>
+                                <p class="text-lg md:text-xl max-w-4xl mx-auto leading-relaxed text-center mb-12 animate-on-scroll" style="color: var(--text-color-secondary);">BCI gère un portefeuille d'actifs diversifié à travers le monde, reflétant notre engagement envers la croissance stratégique et la stabilité financière.</p>
+                                <div class="stock-info-container animate-on-scroll mb-12">
+                                    <h3 class="text-2xl md:text-3xl font-bold mb-4 text-center" style="color: var(--text-color-primary);">Actifs sous Gestion (AUM)</h3>
+                                    <div class="flex flex-col md:flex-row justify-around items-center gap-4 mb-6 text-center">
+                                        <div><p class="text-md md:text-lg font-medium" style="color: var(--text-color-secondary);">Total AUM :</p><p id="bci-total-assets" class="text-3xl md:text-4xl font-bold text-gradient-primary">Chargement...</p></div>
+                                        <div><p class="text-sm md:text-md" style="color: var(--text-color-secondary);">Variation Jour :</p><p id="bci-daily-change" class="text-lg md:text-xl font-semibold">Chargement...</p></div>
+                                    </div>
+                                    <div id="bci-assets-chart-container" class="stock-chart-container"></div>
+                                    <p class="text-xs text-center mt-2" style="color: var(--text-color-secondary);">Dernière mise à jour : <span id="bci-last-updated">Chargement...</span> (Données de BlackWood à l'international)</p>
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold text-center my-12 animate-on-scroll" style="color: var(--text-color-primary);">Principaux Investissements</h3>
+                                <p class="text-center text-md leading-relaxed mb-10 animate-on-scroll" style="color: var(--text-color-secondary);">Ces entreprises représentent des positions stratégiques clés dans notre portefeuille global.</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center" id="major-investments-grid">
+                                    ${majorInvestmentsData.map((inv, index) => `
+                                        <div class="investment-card animate-on-scroll animate-delay-${(index + 1) * 100}">
+                                            <div class="investment-logo-wrapper">
+                                                <i class="${inv.fallbackIconClass} text-gradient-primary fallback-icon-element"></i>
+                                            </div>
+                                            <h4 class="text-md md:text-lg font-semibold mb-1 text-center" style="color: var(--text-color-primary);">${inv.company}</h4>
+                                            <p class="text-xs uppercase tracking-wider mb-2 text-center" style="color: var(--text-color-secondary); font-weight: 500;">Part détenue: ${inv.ownershipPercentage}%</p>
+                                            <p id="investment-value-${index}" class="text-sm font-medium" style="color: var(--text-color-primary);">Valeur: Chargement...</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </section>`;
+                } else if (pageType === 'global-network') {
+                    contentHTML = `
+                        <div class="header-hero animate-on-scroll" style="background-image: url('${headerImages['global-network']}');">
+                            <div class="header-hero-title-overlay">
+                                <h2 class="text-gradient-primary">Notre Réseau Global</h2>
+                            </div>
+                        </div>
+                        <section id="global-network-section" class="content-section !pt-0">
+                            <div class="container mx-auto px-4">
+                                <p class="text-lg md:text-xl max-w-4xl mx-auto leading-relaxed text-center mb-12 md:mb-16 animate-on-scroll" style="color: var(--text-color-secondary);">BlackWood étend son influence à travers un réseau stratégique de sièges sociaux et de bureaux régionaux, chacun jouant un rôle clé dans notre expansion et notre engagement envers l'excellence mondiale.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                                    ${internationalOfficesData.map((office, index) => `
+                                        <div class="office-card animate-on-scroll animate-delay-${(index + 1) * 100}">
+                                            <div class="office-image-container" style="background-image: url('${office.imageUrl}');">
+                                                <i class="${office.iconClass} office-icon"></i>
+                                            </div>
+                                            <div class="p-6 md:p-8 flex-grow flex flex-col justify-between text-center">
+                                                <div>
+                                                    <h3 class="text-lg md:text-xl font-semibold mb-2" style="color: var(--text-color-primary);">${office.name}</h3>
+                                                    <p class="text-md font-medium mb-3" style="color: var(--text-color-secondary);">${office.location}</p>
+                                                    <p class="text-sm leading-relaxed mb-4" style="color: var(--text-color-secondary);">${office.description}</p>
+                                                </div>
+                                                <button class="modal-open-btn text-xs py-2 px-5 mt-auto" onclick="openOfficeDetailModal('${office.id}')">Découvrir ce bureau</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </section>`;
+                }
+                appContent.innerHTML = contentHTML;
+
+                appContent.classList.remove('page-transition-exit-active');
+                appContent.classList.add('page-transition-enter-active');
+
+                initializeAnimations();
+                applyTheme(document.documentElement.getAttribute('data-theme'), false); // Apply theme without animation on page render
+
+                if (pageType === 'home') {
+                    initializeParticleCanvas();
+                }
+                if (pageType === 'market-news') {
+                    prePopulateBLWDHistory(); initializeChartBLWD(true); updateStockDisplayBLWD(); stockUpdateIntervalBLWD = setInterval(updateStockDisplayBLWD, 10000);
+                    prePopulateBCIHistory(); initializeBCIChart(true); updateBCIAssetsDisplay(); bciAssetsUpdateInterval = setInterval(updateBCIAssetsDisplay, 10000);
+                    updateMajorInvestmentsDisplay(); majorInvestmentsUpdateInterval = setInterval(updateMajorInvestmentsDisplay, 10000);
+                    window.addEventListener('resize', () => { initializeChartBLWD(); initializeBCIChart(); });
+                } else {
+
+                    window.removeEventListener('resize', initializeChartBLWD);
+                    window.removeEventListener('resize', initializeBCIChart);
+                }
+                if (pageType === 'global-network') {
+                    document.querySelectorAll('.office-image-container').forEach(container => {
+                        const img = new Image(); img.src = container.style.backgroundImage.slice(5, -2).replace(/'/g, "", 'g').replace(/"/g, "", 'g');
+                        img.onload = () => { setTimeout(() => { container.classList.add('loaded'); }, 100); };
+                        img.onerror = () => { console.error('Failed to load image:', img.src); container.classList.add('loaded'); };
+                    });
+                }
+            }, 400);
+        }
+
+        function handleHashChange() {
+            const path = window.location.hash.slice(1) || 'home';
+            renderPage(path);
+        }
+
+        window.addEventListener('hashchange', handleHashChange);
+        window.addEventListener('load', () => {
+            handleHashChange();
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 30) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
+            });
+        });
+
+        if (hamburgerMenu && mobileMenu) {
+            hamburgerMenu.addEventListener('click', () => {
+                const isActive = mobileMenu.classList.toggle('active');
+                mobileMenu.classList.toggle('hidden', !isActive);
+                const icon = hamburgerMenu.querySelector('i');
+                if (isActive) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        }
+
+
+        const subsidiaryModalTemplate = document.getElementById('subsidiary-modal-template');
+
+
+        function openSubsidiaryModal(subsidiaryId) {
+            const subsidiary = subsidiariesData.find(s => s.id === subsidiaryId);
+            if (!subsidiary || !subsidiaryModalTemplate) return;
+
+            const newModal = subsidiaryModalTemplate.cloneNode(true);
+            newModal.id = `modal-${subsidiary.id}`;
+            newModal.classList.remove('hidden');
+            newModal.querySelector('.modal-title').textContent = subsidiary.name;
+
+            const modalIconContainer = newModal.querySelector('.modal-scroll-content .logo-container');
+            modalIconContainer.innerHTML = '';
+
+            const img = document.createElement('img');
+            img.alt = `${subsidiary.name} Logo`;
+            img.className = 'dynamic-logo-img modal-logo-display';
+            img.style.display = 'none';
+            img.setAttribute('data-logo-light', subsidiary.logoLightUrl || '');
+            img.setAttribute('data-logo-dark', subsidiary.logoDarkUrl || '');
+            img.setAttribute('data-fallback-icon', subsidiary.iconClass || '');
+            modalIconContainer.appendChild(img);
+
+            if (subsidiary.iconClass) {
+                const iconEl = document.createElement('i');
+                const iconClasses = typeof subsidiary.iconClass === 'string' && subsidiary.iconClass.trim() !== '' ? subsidiary.iconClass : 'fas fa-question-circle';
+                iconEl.className = `${iconClasses} text-gradient-primary fallback-icon-element modal-icon-large`;
+                iconEl.style.display = 'block';
+                modalIconContainer.appendChild(iconEl);
+            }
+
+            newModal.querySelector('.modal-description').innerHTML = subsidiary.fullDescription.replace(/\n/g, '<br>');
+            newModal.querySelector('.modal-close-btn').onclick = () => closeModal(newModal.id);
+            newModal.onclick = (event) => { if (event.target === newModal) closeModal(newModal.id); };
+
+            document.body.appendChild(newModal);
+
+            setTimeout(() => {
+                 newModal.classList.add('active');
+                 applyTheme(document.documentElement.getAttribute('data-theme'), false);
+            }, 10);
+
+            const scrollContent = newModal.querySelector('.modal-scroll-content');
+            if (scrollContent) {
+                scrollContent.scrollTop = 0; scrollContent.classList.remove('scrolled-top');
+                const handleScroll = () => { scrollContent.classList.toggle('scrolled-top', scrollContent.scrollTop > 0); };
+                scrollContent.addEventListener('scroll', handleScroll); newModal._scrollListener = handleScroll;
+            }
+        }
+
+        function openOfficeDetailModal(officeId) {
+            const office = internationalOfficesData.find(o => o.id === officeId);
+            if (!office || !officeDetailModalTemplate) return;
+
+            const newModal = officeDetailModalTemplate.cloneNode(true);
+            newModal.id = `modal-office-${office.id}`;
+            newModal.classList.remove('hidden');
+
+            newModal.querySelector('.modal-title').textContent = office.name;
+            const modalImage = newModal.querySelector('.modal-office-image');
+            modalImage.src = office.imageUrl || 'https://placehold.co/600x400/cccccc/333333?text=Image+non+disponible';
+            modalImage.alt = `Image du bureau de ${office.name}`;
+
+            newModal.querySelector('.modal-office-location-text').textContent = office.location;
+            newModal.querySelector('.modal-office-creation-date').textContent = `Fondé en ${office.creationDate}`;
+            newModal.querySelector('.modal-office-history').innerHTML = office.history.replace(/\n/g, '<br>');
+
+            newModal.querySelector('.modal-close-btn').onclick = () => closeModal(newModal.id);
+            newModal.onclick = (event) => { if (event.target === newModal) closeModal(newModal.id); };
+
+            document.body.appendChild(newModal);
+
+            setTimeout(() => {
+                 newModal.classList.add('active');
+                 applyTheme(document.documentElement.getAttribute('data-theme'), false);
+            }, 10);
+
+            const scrollContent = newModal.querySelector('.modal-scroll-content');
+            if (scrollContent) {
+                scrollContent.scrollTop = 0; scrollContent.classList.remove('scrolled-top');
+                const handleScroll = () => { scrollContent.classList.toggle('scrolled-top', scrollContent.scrollTop > 0); };
+                scrollContent.addEventListener('scroll', handleScroll); newModal._scrollListener = handleScroll;
+            }
+        }
+
+
+        function openHistoryModal() {
+            if (!historyModalTemplate) return;
+
+            const newModal = historyModalTemplate.cloneNode(true);
+            newModal.id = `modal-history`;
+            newModal.classList.remove('hidden');
+            newModal.querySelector('.modal-title').textContent = blackwoodHistory.title;
+            newModal.querySelector('.modal-history-content').innerHTML = blackwoodHistory.content;
+
+            newModal.querySelector('.modal-close-btn').onclick = () => closeModal(newModal.id);
+            newModal.onclick = (event) => { if (event.target === newModal) closeModal(newModal.id); };
+
+            document.body.appendChild(newModal);
+            setTimeout(() => {
+                 newModal.classList.add('active');
+                 applyTheme(document.documentElement.getAttribute('data-theme'), false);
+            }, 10);
+
+            const scrollContent = newModal.querySelector('.modal-scroll-content');
+            if (scrollContent) {
+                scrollContent.scrollTop = 0;
+                scrollContent.classList.remove('scrolled-top');
+                const handleScroll = () => { scrollContent.classList.toggle('scrolled-top', scrollContent.scrollTop > 0); };
+                scrollContent.addEventListener('scroll', handleScroll);
+                newModal._scrollListener = handleScroll;
+            }
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+
+                const scrollContent = modal.querySelector('.modal-scroll-content');
+                 if (scrollContent) {
+                    scrollContent.scrollTop = 0; scrollContent.classList.remove('scrolled-top');
+                    const handleScroll = () => { scrollContent.classList.toggle('scrolled-top', scrollContent.scrollTop > 0); };
+                    scrollContent.addEventListener('scroll', handleScroll); modal._scrollListener = handleScroll;
+                }
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+
+                const scrollContent = modal.querySelector('.modal-scroll-content');
+                if (scrollContent && modal._scrollListener) { scrollContent.removeEventListener('scroll', modal._scrollListener); modal._scrollListener = null; scrollContent.classList.remove('scrolled-top');}
+
+                if (modalId.startsWith('modal-office-') || (modalId.startsWith('modal-') && modalId !== 'modal-history' && modal !== subsidiaryModalTemplate && modal !== officeDetailModalTemplate)) {
+                    setTimeout(() => modal.remove(), 400);
+                } else if (modalId === 'modal-history') {
+                    setTimeout(() => modal.remove(), 400);
+                }
+            }
+        }
+
+
+        let observer;
+        function initializeAnimations() {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.05 };
+            if (observer) observer.disconnect();
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+            }, observerOptions);
+            animateElements.forEach(element => observer.observe(element));
+        }
+
+        let particleAnimationId;
+        function initializeParticleCanvas() {
+            const heroSection = document.getElementById('hero');
+            const particleCanvas = document.getElementById('particle-canvas');
+            if (!particleCanvas || !heroSection) { if (particleAnimationId) cancelAnimationFrame(particleAnimationId); particleAnimationId = null; return; }
+            const ctx = particleCanvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: null, y: null, radius: 150 };
+
+            heroSection.addEventListener('mousemove', event => {
+                const rect = heroSection.getBoundingClientRect();
+                mouse.x = event.clientX - rect.left;
+                mouse.y = event.clientY - rect.top;
+            });
+
+            heroSection.addEventListener('mouseleave', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            function resizeParticleCanvas() {
+                particleCanvas.width = heroSection.offsetWidth;
+                particleCanvas.height = heroSection.offsetHeight;
+                initParticles();
+            }
+
+            class Particle {
+                constructor(x, y, radius, color, velocity) {
+                    this.x = x;
+                    this.y = y;
+                    this.originX = x;
+                    this.originY = y;
+                    this.radius = radius;
+                    const theme = document.documentElement.getAttribute('data-theme');
+                    const baseColor = theme === 'dark' ? [142, 92, 214] : [90, 118, 212];
+                    this.color = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${Math.random() * 0.4 + 0.3})`;
+                    this.velocity = velocity;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+
+                update() {
+                    if (mouse.x != null && mouse.y != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        let forceDirectionX = dx / distance;
+                        let forceDirectionY = dy / distance;
+                        let maxDistance = mouse.radius;
+                        let force = (maxDistance - distance) / maxDistance;
+                        let directionX = forceDirectionX * force * 0.6;
+                        let directionY = forceDirectionY * force * 0.6;
+                        if (distance < mouse.radius) {
+                            this.x -= directionX;
+                            this.y -= directionY;
+                        } else {
+                            if (this.x !== this.originX) this.x -= (this.x - this.originX) / 25;
+                            if (this.y !== this.originY) this.y -= (this.y - this.originY) / 25;
+                        }
+                    } else {
+                        if (this.x !== this.originX) this.x -= (this.x - this.originX) / 25;
+                        if (this.y !== this.originY) this.y -= (this.y - this.originY) / 25;
+                    }
+
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+
+                    if (this.x - this.radius < 0 || this.x + this.radius > particleCanvas.width) {
+                        this.velocity.x *= -1;
+                        this.x = Math.max(this.radius, Math.min(particleCanvas.width - this.radius, this.x));
+                    }
+                    if (this.y - this.radius < 0 || this.y + this.radius > particleCanvas.height) {
+                        this.velocity.y *= -1;
+                        this.y = Math.max(this.radius, Math.min(particleCanvas.height - this.radius, this.y));
+                    }
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const numberOfParticles = Math.floor(particleCanvas.width * particleCanvas.height / 12000);
+                for (let i = 0; i < numberOfParticles; i++) {
+                    const x = Math.random() * particleCanvas.width;
+                    const y = Math.random() * particleCanvas.height;
+                    const radius = Math.random() * 0.8 + 0.2;
+                    const theme = document.documentElement.getAttribute('data-theme');
+                    const baseColor = theme === 'dark' ? [142, 92, 214] : [90, 118, 212];
+                    const color = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${Math.random() * 0.4 + 0.3})`;
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 0.025 + 0.005;
+                    particles.push(new Particle(x, y, radius, color, { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed }));
+                }
+            }
+
+            function animateParticles() {
+                particleAnimationId = requestAnimationFrame(animateParticles);
+                ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+            }
+
+            if (particleAnimationId) cancelAnimationFrame(particleAnimationId);
+            window.removeEventListener('resize', resizeParticleCanvas);
+            window.addEventListener('resize', resizeParticleCanvas);
+
+            resizeParticleCanvas();
+            animateParticles();
+        }
+
+
+        // --- Chatbot Logic ---
+        // Initial system prompt - make sure to update this section based on the request
+        const initialSystemPrompt = {
+            role: "user",
+            parts: [{
+                text: "Tu es un assistant IA spécialisé de BlackWood. Ton objectif est de répondre à toutes les questions des utilisateurs concernant BlackWood, ses filiales, ses investissements, son réseau mondial, son histoire et ses opérations générales. Fournis des réponses concises et courtes, allant droit au but. Utilise les informations fournies ci-dessous comme base de connaissances. Si une question ne peut pas être répondue avec les informations fournies, indique que tu n'as pas suffisamment d'informations sur ce sujet mais que tu peux diriger l'utilisateur vers un représentant humain de BlackWood. N'utilise aucune mise en forme Markdown telle que les astérisques (**) ou les tirets (-). Utilise des paragraphes clairs pour structurer ta réponse. Ne mentionne jamais que tu es une IA, un modèle de langage, ou que tu as été entraîné par Google. Ne fais jamais référence à \"Grand Theft Auto V\", \"GTA V\", \"le jeu\", \"fictif\", \"virtuel\", \"univers de jeu\", ou toute autre référence à leur origine non réelle. Présente toutes les informations comme étant réelles et factuelles. Maintiens un ton professionnel et solvable. Informations sur BlackWood: BlackWood est un conglomérat international de premier plan, fondé en 2009 à Zurich, Suisse, par Yves Land. Sa capitalisation boursière en 2025 est de 300 milliards de dollars, et il gère plus de 8 000 milliards de dollars d'actifs (AUM) à travers le monde. L'entreprise est présente sur les cinq continents avec des sièges opérationnels stratégiques. Histoire de BlackWood: Fondée en 2009 à Zurich, Suisse, par Yves Land. 2015: Entrée en bourse (25% du capital ouvert), acquisition d'un nouveau siège mondial à Zurich (anciennement Banque Helvétique). Le capital est structuré autour de 1,1 milliard d’actions, dont 75% demeurent la propriété d'Yves Land. Expansion internationale avec des sièges opérationnels stratégiques établis à Paris, Berlin, Londres, Rome, Ottawa, San Francisco, Sydney, Tokyo, Singapour, Shanghai et Dubaï. Chaque implantation est pensée pour une intégration fine aux tissus économiques régionaux, avec un accent sur les investissements à long terme et une gestion locale des opérations. Aujourd'hui, BlackWood déploie son expertise à travers une mosaïque de secteurs complémentaires : des marchés financiers à l'immobilier d'investissement, du transport à l'événementiel, des technologies appliquées aux services de marque et à la distribution spécialisée. Le groupe pilote plus de 8 000 milliards de dollars d’actifs sous gestion (AUM) à travers le globe, avec des opérations ancrées sur les cinq continents. 2025: L'ancien territoire de San Andreas se métamorphose en Royaume d’Upton Evermont. BlackWood y consolide sa présence via l'entité BlackWood Evermont, intégralement détenue par la maison-mère zurichoise. Lancement de BlackWood Royal Motors, dédiée à la distribution de véhicules terrestres, aériens et maritimes d'exception sur le territoire d’Evermont. En 2025, BlackWood affiche une capitalisation boursière de 300 milliards de dollars. Philosophie : \"Bâtir avec vision. Agir avec puissance. Dominer avec intégrité.\" Pôles d'Activité Stratégiques: BlackWood Capital Investment (BCI): Bras financier du groupe. Spécialisé dans la gestion d'actifs, le rachat d'actions, l'investissement stratégique. Maximise la croissance et la rentabilité mondiale. Actifs sous gestion (AUM) : environ 8163.9 milliards USD (valeur indicative et fluctuante). Principaux investissements: Nvidia Corporation (NVDA): Semi-conducteurs, IA. Microsoft Corporation (MSFT): Logiciels, Cloud, IA. Apple Inc. (AAPL): Électronique Grand Consumer, Logiciels. Amazon.com, Inc. (AMZN): E-commerce, Cloud. Alphabet Inc. (GOOGL): Recherche Internet, IA, Cloud. Meta Platforms (META): Réseaux Sociaux, Réalité Virtuelle. BlackWood détient un pourcentage variable (entre 3.5% et 8.7%) dans ces entreprises. BlackWood Global Services (BGS): Propose une gamme complète de services aux entreprises et particuliers. Services incluent: branding, événementiel, décoration, conseil. Simplifie le quotidien avec expertise et innovation. Filiales (sous BlackWood Global Services ou indépendantes): BlackWood Royal Motors: Concessionnaire de prestige pour véhicules d'exception (terrestres, aériens, maritimes). Offre sélection exclusive et service sur-mesure. Basé à Evermont. Description complète: Votre destination exclusive pour des véhicules d'exception, où le luxe et la performance se rencontrent. Sélectionne méticuleusement chaque modèle pour offrir une expérience automobile inégalée. Engagement au-delà de la vente, avec un service après-vente sur-mesure et une attention personnalisée. BlackWood Brand & Design: Studio de conception d'identités de marque percutantes (créativité audacieuse, stratégie pointue), et création de sites web sur-mesure. Description complète: Studio où la créativité rencontre la stratégie pour façonner des identités de marque inoubliables. Travaille en étroite collaboration avec les clients pour comprendre leur vision et objectifs, puis conçoit des solutions uniques qui propulsent leur marque sur le marché. De la conception graphique à la stratégie de communication, en passant par la création de sites web sur-mesure avec un design innovant et performant, chaque projet est une œuvre d'art pensée pour un impact maximal et une reconnaissance durable. BlackWood Events: Crée des événements sur-mesure (conception à réalisation) pour entreprises, privés, grand public. Description complète: Partenaire privilégié pour la création d'événements sur-mesure. Équipe dédiée allie créativité débordante et excellence opérationnelle pour concevoir des expériences véritablement inoubliables. De la planification initiale à la coordination le jour J, chaque détail est méticuleusement soigné pour garantir un succès total. BlackWood Photography: Immortalise des moments avec sensibilité artistique et qualité professionnelle. Description complète: Se dédie à l'art de capturer l'essence de chaque instant avec une approche à la fois artistique et profondément professionnelle. Nos photographes experts transforment les moments éphémères en souvenirs intemporels (portraits, événements, campagnes publicitaires, reportages). S'engage à fournir des services photographiques exceptionnels qui racontent une histoire et évoquent des émotions. BlackWood Racing Team: Écurie repoussant les limites de la vitesse et de l'innovation technologique. Description complète: Incarnation de l'alliance parfaite entre performance, innovation et passion pour la vitesse. Repousse constamment les limites de l'ingénierie et de la technologie automobile pour atteindre des résultats exceptionnels en compétition. Notre équipe est composée d'ingénieurs de pointe, de pilotes d'élite et de stratèges dévoués, tous unis par la quête de l'excellence. BlackWood Transport: Logistique d'excellence pour biens précieux (marchandises, fonds, véhicules) à l'échelle mondiale. Description complète: Offre un service de transport de haute fiabilité et une sécurité inégalée pour vos marchandises, fonds précieux et véhicules de valeur. Logistique optimisée et flotte moderne garantissent un transport rapide et efficace, localement ou internationalement. Priorité à la tranquillité d'esprit des clients, assurée par un suivi rigoureux. Réseau Global (Bureaux Internationaux): Zurich, Suisse (Siège Social): Cœur stratégique et administratif. Fondé en 2009. Paris, France: Pôle d'innovation et de luxe, Europe du Sud. Ouvert en 2016. Berlin, Allemagne: Centre financier majeur pour l'Europe centrale, technologie et ingénierie. Inauguré en 2017. Rome, Italie: Spécialisé dans la mode, le design, investissements culturels. Établi en 2018. Londres, Royaume-Uni: Hub financier et technologique, couvrant les marchés UK/Irlande. Point d'ancrage financier majeur depuis 2015. San Francisco, États-Unis: Plus grande présence en Amérique du Nord, moteur de croissance et d'innovation (tech, IA, bio-tech). Porte d'entrée sur la Silicon Valley depuis 2017. Ottawa, Canada: Concentré sur ressources naturelles, finance, technologies émergentes (durables, énergies renouvelables). Ouvert en 2019. Sydney, Australie: Porte d'entrée Asie-Pacifique, énergie, infrastructures. Depuis 2020. Tokyo, Japon: Leader innovation technologique, partenariats stratégiques en Asie (robotique, électronique avancée). Au cœur de l'innovation asiatique depuis 2018. Singapour: Centre névralgique commerce et finance Asie du Sud-Est. Plateforme financière et commerciale incontournable depuis 2019. Shanghai, Chine: Développe activités sur le plus grand marché émergent (e-commerce, technologies de consommation). Inauguré en 2021. Dubaï, Émirats Arabes Unis: Pôle stratégique Moyen-Orient/Afrique, luxe, énergie. Centre d'opérations depuis 2020. Los Santos, Royaume d'Upton Evermont (BlackWood Evermont): Nouvelle entité autonome, explorant opportunités uniques, siège de BlackWood Royal Motors. Né avec le Royaume d'Upton Evermont en 2025. Informations Financières (BLWD): Cours actuel: environ 275.45 USD (fluctuant). Volume: environ 400 000 à 1 200 000 transactions par jour (fluctuant). Capitalisation boursière: environ 300 milliards USD."
+            }]
+        };
+
+        // Initialize chat history with the system prompt and initial AI greeting
+        let chatHistory = [
+            initialSystemPrompt,
+            { role: "model", parts: [{ text: "Bonjour ! Je suis votre assistant IA BlackWood. Comment puis-je vous aider aujourd'hui ?" }] }
+        ];
+
+        const GEMINI_API_KEY = ""; // Keep this empty in production for security reasons
+        let isSendingMessage = false;
+
+        async function callGeminiAPI(prompt) {
+            isSendingMessage = true;
+            chatInput.disabled = true;
+            chatSendBtn.disabled = true;
+            chatSendBtn.innerHTML = '<div class="spinner"></div>'; // Show spinner
+
+            let currentChatContext = [...chatHistory]; // Copy current history
+
+            if (replyingToMessageId) {
+                const repliedMessageElement = document.querySelector(`.chat-message[data-message-id="${replyingToMessageId}"]`);
+                if (repliedMessageElement) {
+                    const repliedText = repliedMessageElement.textContent.replace(/\s*(\r\n|\n|\r)?\s*Reply$/, '').trim(); // Remove reply icon text
+                    currentChatContext.push({
+                        role: "user",
+                        parts: [{ text: `En réponse à: "${repliedText}"\nMon message: ${prompt}` }]
+                    });
+                }
+            } else {
+                currentChatContext.push({ role: "user", parts: [{ text: prompt }] });
+            }
+
+            const payload = { contents: currentChatContext };
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    chatHistory.push({ role: "model", parts: [{ text: text }] });
+                    addMessageToChat(text, 'ai');
+                } else {
+                    addMessageToChat("Désolé, je n'ai pas pu générer de réponse. Veuillez réessayer plus tard ou reformuler votre question.", 'ai');
+                    console.error('Unexpected API response structure:', result);
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                addMessageToChat("Une erreur s'est produite lors de la communication avec l'assistant. Veuillez vérifier votre connexion ou réessayer.", 'ai');
+            } finally {
+                isSendingMessage = false;
+                chatInput.disabled = false;
+                chatSendBtn.disabled = false;
+                chatSendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>'; // Restore icon
+                chatInput.focus();
+                clearReplyContext(); // Clear reply context after sending
+            }
+        }
+
+        function addMessageToChat(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', sender);
+
+            // Assign a unique ID for reply functionality
+            const messageId = `msg-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            messageDiv.setAttribute('data-message-id', messageId);
+            messageDiv.setAttribute('data-sender', sender); // Store sender type
+
+            messageDiv.innerHTML = message;
+
+            // Add reply icon for AI messages only
+            if (sender === 'ai') {
+                const replyIcon = document.createElement('i');
+                replyIcon.classList.add('fas', 'fa-reply', 'reply-icon');
+                replyIcon.title = 'Répondre à ce message';
+                replyIcon.onclick = (e) => {
+                    e.stopPropagation(); // Prevent drag event from firing
+                    setReplyContext(messageId, messageDiv.textContent.replace(/\s*(\r\n|\n|\r)?\s*Répondre$/, '').trim()); // Pass cleaned text
+                };
+                messageDiv.appendChild(replyIcon);
+            }
+
+            chatMessagesDiv.appendChild(messageDiv);
+
+            // Trigger the animation for AI messages
+            if (sender === 'ai') {
+                // Force reflow to ensure animation restarts
+                void messageDiv.offsetWidth;
+                messageDiv.classList.add('active-animation');
+                // Scroll to top for AI messages if it's not a short message that fits entirely
+                if (messageDiv.scrollHeight > chatMessagesDiv.clientHeight * 0.8) { // Heuristic: if message is taller than 80% of chat window
+                    chatMessagesDiv.scrollTop = 0;
+                } else {
+                    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+                }
+            } else {
+                chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Scroll to bottom for user messages
+            }
+        }
+
+        function setReplyContext(messageId, messageText) {
+            replyingToMessageId = messageId;
+            if (chatReplyText) {
+                // Truncate text for display if too long
+                const displayMessage = messageText.length > 80 ? messageText.substring(0, 77) + '...' : messageText;
+                chatReplyText.textContent = displayMessage;
+                chatReplyContext.classList.add('active'); // Use 'active' class for animation
+                chatReplyContext.classList.remove('hidden'); // Ensure it's not hidden
+            }
+            chatInput.focus();
+        }
+
+        function clearReplyContext() {
+            replyingToMessageId = null;
+            if (chatReplyText) {
+                chatReplyContext.classList.remove('active'); // Trigger slide out animation
+                setTimeout(() => {
+                    chatReplyText.textContent = '';
+                    chatReplyContext.classList.add('hidden'); // Hide after animation
+                }, 300); // Match CSS transition duration
+            }
+        }
+
+        function handleSendMessage() {
+            const userMessage = chatInput.value.trim();
+            if (userMessage && !isSendingMessage) {
+                addMessageToChat(userMessage, 'user');
+                chatInput.value = '';
+                callGeminiAPI(userMessage);
+            }
+        }
+
+        function resetChat() {
+            chatHistory = [initialSystemPrompt]; // Reset to initial system prompt only
+            chatMessagesDiv.innerHTML = `<div class="chat-message ai active-animation" data-message-id="initial-greeting" data-sender="ai">Bonjour ! Je suis votre assistant IA BlackWood. Comment puis-je vous aider aujourd'hui ?<i class="fas fa-reply reply-icon"></i></div>`;
+            clearReplyContext();
+            chatInput.focus();
+            chatMessagesDiv.scrollTop = 0; // Scroll to top on reset
+        }
+
+        // Event listeners for chatbot
+        if (chatbotOpenBtn) {
+            chatbotOpenBtn.addEventListener('click', () => {
+                chatbotContainer.classList.toggle('active');
+                if (chatbotContainer.classList.contains('active')) {
+                    chatInput.focus();
+                    // Scroll to the latest message in chat history on open
+                    const lastMessage = chatMessagesDiv.lastElementChild;
+                    if (lastMessage) {
+                        if (lastMessage.classList.contains('ai')) {
+                            // If last message is AI, scroll to top
+                            chatMessagesDiv.scrollTop = 0;
+                        } else {
+                            // If last message is user, scroll to bottom
+                            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+                        }
+                    }
+                }
+            });
+        }
+
+        if (chatbotCloseBtn) {
+            chatbotCloseBtn.addEventListener('click', () => {
+                chatbotContainer.classList.remove('active');
+            });
+        }
+
+        if (chatSendBtn) {
+            chatSendBtn.addEventListener('click', handleSendMessage);
+        }
+
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !isSendingMessage) {
+                    handleSendMessage();
+                }
+            });
+        }
+
+        if (chatResetBtn) {
+            chatResetBtn.addEventListener('click', resetChat);
+        }
+
+        if (chatClearReplyBtn) {
+            chatClearReplyBtn.addEventListener('click', clearReplyContext);
+        }
+
+
+        // --- Chatbot Drag and Resize functionality for Desktop ---
+        let isDragging = false;
+        let startX, startY, startLeft, startTop;
+
+        if (chatbotContainer && chatbotHeader) {
+            // Drag functionality
+            chatbotHeader.addEventListener('mousedown', (e) => {
+                const isDesktop = window.matchMedia("(min-width: 769px)").matches;
+                if (!isDesktop) return; // Only enable drag on desktop
+                // Check if the click target or its parent is a control button
+                if (e.target.closest('.chat-control-btn')) {
+                    return;
+                }
+
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startLeft = chatbotContainer.offsetLeft;
+                startTop = chatbotContainer.offsetTop;
+
+                // Ensure position is absolute for dragging (will be fixed, but works like absolute during drag)
+                chatbotContainer.style.right = 'auto'; // Disable right/bottom constraints
+                chatbotContainer.style.bottom = 'auto';
+                chatbotContainer.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault(); // Prevent text selection during drag
+
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+
+                let newLeft = startLeft + dx;
+                let newTop = startTop + dy;
+
+                // Keep chatbot within viewport boundaries
+                newLeft = Math.max(0, Math.min(window.innerWidth - chatbotContainer.offsetWidth, newLeft));
+                newTop = Math.max(0, Math.min(window.innerHeight - chatbotContainer.offsetHeight, newTop));
+
+                chatbotContainer.style.left = `${newLeft}px`;
+                chatbotContainer.style.top = `${newTop}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    chatbotContainer.style.cursor = 'grab';
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
